@@ -255,7 +255,8 @@ a{text-decoration:none;color:inherit}
 .feat-body{padding:28px}
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:4px;padding:4px 10px;margin-bottom:14px}
 .badge-red{background:rgba(207,32,48,.08);color:var(--red)}
-.feat-body h3{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;color:var(--gray-900);margin-bottom:10px;line-height:1.3}
+.feat-body h3{font-family:"Noto Serif TC",serif;font-size:18px;font-weight:700;color:var(--gray-900);margin-bottom:6px;line-height:1.3}
+.evt-sub{font-size:14px;color:var(--gray-600);line-height:1.6;margin-bottom:12px;max-width:600px}
 .evt-meta{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:14px}
 .meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-600)}
 .meta-item svg{width:14px;height:14px;stroke:var(--gray-400);fill:none;stroke-width:2;flex-shrink:0}
@@ -2223,12 +2224,13 @@ function acRender(list){
     var btn = (x['報名連結'] && !done) ? '<div style="display:flex;gap:12px;flex-wrap:wrap"><a href="'+acEsc(x['報名連結'])+'?openExternalBrowser=1" target="_blank" rel="noopener" class="btn btn-primary">立即報名</a></div>'
             : (x['報名連結'] ? '<div style="display:flex;gap:12px;flex-wrap:wrap"><a href="'+acEsc(x['報名連結'])+'?openExternalBrowser=1" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:var(--gray-200);color:var(--gray-500)">查看報名表單</a></div>' : '');
     var side = dt&&!isNaN(dt) ? '<div class="feat-side"><div><div class="date-big">'+dt.getDate()+'</div><div class="date-month">'+mN[dt.getMonth()]+' '+dt.getFullYear()+'</div><div class="date-wd">'+wd[dt.getDay()]+'</div></div></div>' : '';
+    var typeLabel = x['類型'] || '分會活動';
     return '<div class="feat-event" style="margin-bottom:16px"><div class="feat-body">'
-      +'<div class="badge badge-red">'+acEsc(x['活動名稱'])+'</div>'
+      +'<div class="badge badge-red">'+acEsc(typeLabel)+'</div>'
       +(statusHTML?'<div style="margin-bottom:10px">'+statusHTML+'</div>':'')
       +'<h3>'+acEsc(x['活動名稱'])+'</h3>'
+      +(x['活動副標']?'<p class="evt-sub">'+acEsc(x['活動副標'])+'</p>':'')
       +'<div class="evt-meta">'+meta+'</div>'+btn
-      +(x['備註']?'<p style="font-size:13px;color:var(--gray-500);margin-top:10px">'+acEsc(x['備註'])+'</p>':'')
       +'</div>'+side+'</div>';
   }).join('');
 }
@@ -2248,15 +2250,32 @@ function acMapFromCalendar(rows){
     if(!d || isNaN(d)) return false;
     return d >= winStart && d <= winEnd;   // 只留本月+下月
   }).map(function(r){
+    // 副標：優先讀後台「副標」欄；沒有則從「備註」抓第一句有意義的文字（不倒整段）
+    var sub = r['副標'] || r['副标'] || '';
+    if(!sub && r['備註']){
+      // 從備註抓第一段非裝飾、非「日期/時間/地點」開頭、長度適中的句子
+      var lines = String(r['備註']).split(/\n+/).map(function(s){return s.trim();}).filter(Boolean);
+      for(var i=0;i<lines.length;i++){
+        var ln = lines[i].replace(/^[🎉🚢📅📍🎊✨\s]+/,'').trim();
+        // 跳過：純符號、日期時間地點報名等欄位式資訊、太短的標題重複
+        if(ln.length < 8) continue;
+        if(/^(活動日期|活動時間|日期|時間|地點|報名|限量|📅|📍|報名截止)/.test(ln)) continue;
+        if(ln === (r['名稱']||'')) continue;
+        sub = ln.length > 42 ? ln.substring(0,40)+'…' : ln;
+        break;
+      }
+    }
     return {
       '活動名稱': r['名稱']||'',
+      '活動副標': sub,
+      '類型': r['類型']||'活動',
       '日期時間': r['日期']||'',
       '地點': '',                        // 行事曆無地點欄，留空（卡片自動不顯示）
       '費用': '',
       '報名連結': r['連結']||'',
       '報名截止': '',
       '狀態': '即將舉行',
-      '備註': r['備註']||''
+      '備註': ''                          // 不再倒整段備註進卡片
     };
   });
 }
