@@ -208,6 +208,27 @@ a{text-decoration:none;color:inherit}
 }
 .cal-day.tip-open .cal-tooltip{display:block}
 
+/* ── 新增活動「+」按鈕（CAL_ADDBTN_K2PX9W3M）── */
+.cal-add-btn{
+  position:absolute;top:4px;right:4px;
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(0,0,0,.06);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gray-400);font-size:14px;line-height:1;
+  font-family:sans-serif;
+  opacity:0;
+  transition:opacity .15s,background .15s,color .15s;
+  z-index:2;
+}
+/* 桌面：hover 整個格子時才讓 + 出現 */
+.cal-day:not(.empty):not(.has-event):hover .cal-add-btn{opacity:1}
+.cal-add-btn:hover{background:rgba(207,32,48,.12);color:var(--red);}
+/* 手機 max-600px：+ 常駐淡顯，不依賴 hover */
+@media(max-width:600px){
+  .cal-add-btn{opacity:.28;width:16px;height:16px;font-size:11px;top:2px;right:2px;}
+  .cal-add-btn:hover,.cal-day:not(.empty):not(.has-event):hover .cal-add-btn{opacity:.6}
+}
+
 /* 圖例 */
 .cal-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;align-items:center}
 .cal-legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--gray-600)}
@@ -1136,6 +1157,87 @@ tr.hidden{display:none}
   .recruit-btn{font-size:15px}
 }
 
+/* ── ADD EVENT MODAL（ADDEVT_MODAL_R7MN4KX2）── */
+.addevt-modal-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(26,31,41,.6);
+  z-index:500;
+  align-items:center;justify-content:center;
+  padding:24px;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.addevt-modal-overlay.open{display:flex}
+.addevt-modal{
+  background:#fff;border-radius:var(--r-lg);
+  max-width:460px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);
+  overflow:hidden;
+  animation:modalIn .22s cubic-bezier(.34,1.3,.64,1);
+}
+.addevt-modal-head{
+  background:var(--red);padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.addevt-modal-head-title{
+  font-family:"Noto Serif TC",serif;
+  font-size:17px;font-weight:700;color:#fff;
+}
+.addevt-modal-close{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.2);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;line-height:1;
+  transition:background .15s;flex-shrink:0;
+  font-family:sans-serif;
+}
+.addevt-modal-close:hover{background:rgba(255,255,255,.35)}
+.addevt-modal-body{padding:28px 24px 20px}
+.addevt-modal-icon{
+  display:flex;align-items:center;justify-content:center;
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(207,32,48,.08);margin:0 auto 16px;
+}
+.addevt-modal-icon svg{width:26px;height:26px;stroke:var(--red);fill:none;stroke-width:2}
+.addevt-modal-msg{
+  text-align:center;
+  font-size:15px;color:var(--gray-700,#3d4555);
+  line-height:1.75;
+  margin-bottom:20px;
+}
+.addevt-checklist{
+  list-style:none;
+  background:var(--gray-50);border-radius:var(--r-md);
+  padding:14px 16px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.addevt-checklist li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:14px;color:var(--gray-800);line-height:1.5;
+}
+.addevt-checklist-icon{
+  font-size:18px;line-height:1;flex-shrink:0;margin-top:1px;
+}
+.addevt-checklist-text strong{
+  display:block;font-weight:600;color:var(--gray-900);font-size:13px;
+}
+.addevt-checklist-text span{
+  font-size:12px;color:var(--gray-500);
+}
+.addevt-modal-footer{
+  padding:20px 24px 24px;display:flex;justify-content:center;
+}
+.addevt-modal-ok{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--red);color:#fff;
+  padding:12px 28px;border-radius:var(--r-sm);
+  font-size:14px;font-weight:600;
+  border:none;cursor:pointer;font-family:"Noto Sans TC",sans-serif;
+  transition:background .15s;text-decoration:none;
+}
+.addevt-modal-ok:hover{background:var(--red-dark)}
+
 /* ── RECRUIT MODAL ── */
 .recruit-modal-overlay{
   display:none;
@@ -1399,6 +1501,66 @@ tr.hidden{display:none}
     </div>
     <div class="recruit-modal-footer">
       <button class="recruit-modal-ok" onclick="closeRecruitModal()">好，我先去敲 LINE 👌</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── ADD EVENT MODAL（ADDEVT_MODAL_R7MN4KX2）── -->
+<div class="addevt-modal-overlay" id="addevtModal" onclick="closeAddEvtModal(event)">
+  <div class="addevt-modal" role="dialog" aria-modal="true" aria-labelledby="addevtModalTitle">
+    <div class="addevt-modal-head">
+      <span class="addevt-modal-head-title" id="addevtModalTitle">想新增活動？</span>
+      <button class="addevt-modal-close" onclick="closeAddEvtModal()" aria-label="關閉">&#x2715;</button>
+    </div>
+    <div class="addevt-modal-body">
+      <div class="addevt-modal-icon">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <line x1="12" y1="14" x2="12" y2="18"/>
+          <line x1="10" y1="16" x2="14" y2="16"/>
+        </svg>
+      </div>
+      <p class="addevt-modal-msg">夥伴們辦活動時，準備好以下素材，填進共用試算表，行事曆和活動牆就會自動更新 ✨</p>
+      <ul class="addevt-checklist">
+        <li>
+          <span class="addevt-checklist-icon">📷</span>
+          <div class="addevt-checklist-text">
+            <strong>活動照片</strong>
+            <span>夥伴自製的活動宣傳圖</span>
+          </div>
+        </li>
+        <li>
+          <span class="addevt-checklist-icon">📅</span>
+          <div class="addevt-checklist-text">
+            <strong>活動日期時間</strong>
+            <span>包含開始與結束時間</span>
+          </div>
+        </li>
+        <li>
+          <span class="addevt-checklist-icon">📝</span>
+          <div class="addevt-checklist-text">
+            <strong>報名方式</strong>
+            <span>報名連結或聯絡窗口</span>
+          </div>
+        </li>
+        <li>
+          <span class="addevt-checklist-icon">📍</span>
+          <div class="addevt-checklist-text">
+            <strong>活動地點</strong>
+            <span>線下地址或線上會議連結</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="addevt-modal-footer">
+      <a class="addevt-modal-ok"
+         href="https://docs.google.com/spreadsheets/d/1XcSJ_U6i6kIHruHObblZEVQEd7d4M0X8LNGG9Oftgd0/edit"
+         target="_blank" rel="noopener">
+        前往共用試算表新增 →
+      </a>
     </div>
   </div>
 </div>
@@ -1889,9 +2051,12 @@ function renderCalGrid() {
     }
     var tipHtml = hasEvt ? '<div class="cal-tooltip">' + tipLines.join('<br>') + '</div>' : '';
 
+    var addBtnHtml = (!hasEvt) ?
+      '<button class="cal-add-btn" aria-label="新增活動" title="新增活動">+</button>' : '';
+
     html += '<div class="' + cls + '" data-date="' + dateKey + '">' +
       '<span class="cal-day-num">' + d + '</span>' +
-      evtHtml + tipHtml + '</div>';
+      evtHtml + tipHtml + addBtnHtml + '</div>';
   }
 
   container.innerHTML = html;
@@ -1950,6 +2115,16 @@ document.addEventListener('DOMContentLoaded', function() {
     calCur.m++;
     if (calCur.m > 11) { calCur.m = 0; calCur.y++; }
     renderCalGrid();
+  });
+
+  // 事件委派：點「+」按鈕開啟新增活動彈窗（CAL_ADDBTN_K2PX9W3M）
+  // 綁在 calDays 上，只綁一次，渲染切月都不需重綁
+  document.getElementById('calDays').addEventListener('click', function(ev) {
+    var btn = ev.target.closest('.cal-add-btn');
+    if (btn) {
+      ev.stopPropagation();
+      openAddEvtModal();
+    }
   });
 });
 
@@ -2341,6 +2516,19 @@ function gnFmt(d){
 })();
 
 // ─────────────────────────────────────────────
+// ADD EVENT MODAL（ADDEVT_MODAL_R7MN4KX2）
+// ─────────────────────────────────────────────
+function openAddEvtModal(){
+  var m=document.getElementById('addevtModal');
+  if(m){m.classList.add('open');document.body.style.overflow='hidden';}
+}
+function closeAddEvtModal(e){
+  if(e && e.target!==document.getElementById('addevtModal')) return;
+  var m=document.getElementById('addevtModal');
+  if(m){m.classList.remove('open');document.body.style.overflow='';}
+}
+
+// ─────────────────────────────────────────────
 // RECRUIT MODAL (RECRUIT_4K9MZ2WX)
 // 未來接真實報名頁時：移除 openRecruitModal/closeRecruitModal 兩函式
 // 並把 HTML 裡的 <button onclick="openRecruitModal()"> 換成 <a href="...">
@@ -2355,9 +2543,12 @@ function closeRecruitModal(e){
   var m=document.getElementById('recruitModal');
   if(m){m.classList.remove('open');document.body.style.overflow='';}
 }
-// ESC 鍵關閉
+// ESC 鍵關閉（recruit + addevt 兩個 modal）
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape') closeRecruitModal();
+  if(e.key==='Escape'){
+    closeRecruitModal();
+    closeAddEvtModal();
+  }
 });
 
 // ─────────────────────────────────────────────
