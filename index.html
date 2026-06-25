@@ -1556,46 +1556,11 @@ tr.hidden{display:none}
       <h2>活動詳情</h2>
       <p>近期場次說明 · 報名連結</p>
     </div>
+    <!-- 動態讀後台 Sheet「活動」分頁（ACTIVITIES_FEED_9X）；fetch 失敗回退寫死那筆 -->
     <div id="activitiesContent">
-      <div class="feat-event">
-        <div class="feat-body">
-          <div class="badge badge-red">首次實體聚會</div>
-          <div style="margin-bottom:10px">
-            <span class="status s-done" style="background:rgba(90,100,114,.07);color:#5A6472">已結束</span>
-          </div>
-          <h3>首次實體聚會 @延吉館 B1</h3>
-          <div class="evt-meta">
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              2026 年 04 月 17 日（星期五）
-            </div>
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-              19:00
-            </div>
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              空白場域 延吉館 B1（台北市大安區延吉街153-10號B1）
-            </div>
-            <div class="meta-item">
-              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-              $300（現場收現金）
-            </div>
-          </div>
-          <div style="display:flex;gap:12px;flex-wrap:wrap">
-            <a href="https://forms.gle/DM7wQCLWxxpPJxCy8" target="_blank" rel="noopener" class="btn btn-primary">查看報名表單</a>
-          </div>
-        </div>
-        <div class="feat-side">
-          <div>
-            <div class="date-big">17</div>
-            <div class="date-month">APR 2026</div>
-            <div class="date-wd">星期五</div>
-          </div>
-        </div>
-      </div>
-      <p style="font-size:13px;color:var(--gray-400);margin-top:12px;text-align:center">更多活動請見上方行事曆</p>
+      <div class="ac-loading" style="font-size:14px;color:var(--gray-400);padding:18px 0">活動資料載入中…</div>
     </div>
+    <p style="font-size:13px;color:var(--gray-400);margin-top:12px;text-align:center">更多活動請見上方行事曆</p>
     <div class="admin-edit">
       <a href="#">
         <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -2088,7 +2053,7 @@ if(document.readyState === 'loading'){
 // 接 GAS 後：把 TRAINING_API 填上 GAS web app URL，會自動改 fetch；
 // 失敗或未填則用 trainingFallback（2026-06-25 抓的真資料）。
 // ─────────────────────────────────────────────
-var TRAINING_API = ''; // ←給值範例：'https://script.google.com/macros/s/XXX/exec?sheet=培訓快訊'
+var TRAINING_API = 'https://script.google.com/macros/s/AKfycbyCL7tHMfIkHHAhL0WDX-TMdMfmxNdWkVkGRhdaAjESgmUZ3-eJKJ7YsOi1IS-RMxW4/exec?sheet=培訓快訊';
 // mode：'online'=線上 Zoom / 'offline'=線下實體（爬蟲依官方內頁「培訓地址」自動判斷）
 var trainingFallback = [
   {title:'新北市西B區成功會員培訓初階MSP', link:'https://bntw.niiice-design.com/news/msp-4/', date:'2026-06-29', mode:'online'},
@@ -2182,15 +2147,84 @@ function tfInit(list){
   tfPaint();
 }
 
+// GAS 回的中文欄位（標題/日期/連結/上課方式）→ 前端英文 key（title/date/link/mode）
+function tfMap(rows){
+  return (rows||[]).map(function(r){
+    if(r.title || r.link) return r; // 已是英文 key（fallback）直接用
+    return {
+      title: r['標題'] || r['名稱'] || '',
+      date:  r['日期'] || '',
+      link:  r['連結'] || '',
+      mode:  (r['上課方式'] || r['mode'] || 'online')
+    };
+  }).filter(function(x){ return x.title; });
+}
 (function loadTraining(){
   if(TRAINING_API){
     fetch(TRAINING_API + (TRAINING_API.indexOf('?')>-1?'&':'?') + 't=' + Date.now())
       .then(function(r){ return r.json(); })
-      .then(function(data){ tfInit(Array.isArray(data)?data:(data.rows||data.data||[])); })
+      .then(function(data){
+        var rows = Array.isArray(data) ? data : (data.data || data.rows || []);
+        var mapped = tfMap(rows);
+        tfInit(mapped.length ? mapped : trainingFallback);
+      })
       .catch(function(){ tfInit(trainingFallback); });
   }else{
     tfInit(trainingFallback);
   }
+})();
+
+// ─────────────────────────────────────────────
+// 活動詳情 (ACTIVITIES_FEED_9X) — 動態讀後台「活動」分頁
+// ─────────────────────────────────────────────
+var ACTIVITIES_API = 'https://script.google.com/macros/s/AKfycbyCL7tHMfIkHHAhL0WDX-TMdMfmxNdWkVkGRhdaAjESgmUZ3-eJKJ7YsOi1IS-RMxW4/exec?sheet=活動';
+var activitiesFallback = [{
+  '活動名稱':'首次實體聚會','日期時間':'2026-04-17 19:00',
+  '地點':'空白場域 延吉館 B1（台北市大安區延吉街153-10號B1）','費用':'$300 現場收現金',
+  '報名連結':'https://forms.gle/DM7wQCLWxxpPJxCy8','報名截止':'2026-04-15','狀態':'已結束','備註':''
+}];
+function acEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function acRender(list){
+  var box=document.getElementById('activitiesContent');
+  if(!box) return;
+  var mN=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  var wd=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+  // 依日期排序：未結束的在前、最近的在上
+  var rows=(list||[]).filter(function(x){return x['活動名稱'];});
+  rows.sort(function(a,b){return String(a['日期時間']||'').localeCompare(String(b['日期時間']||''));});
+  if(!rows.length){ box.innerHTML='<div class="ac-loading" style="font-size:14px;color:var(--gray-400);padding:18px 0">目前暫無活動，請見上方行事曆。</div>'; return; }
+  box.innerHTML=rows.map(function(x){
+    var dt=x['日期時間']?new Date(String(x['日期時間']).replace(' ','T')):null;
+    var done=/已結束|結束/.test(x['狀態']||'');
+    var statusHTML = x['狀態'] ? '<span class="status '+(done?'s-done':'s-open')+'" style="'+(done?'background:rgba(90,100,114,.07);color:#5A6472':'background:rgba(207,32,48,.08);color:var(--red)')+'">'+acEsc(x['狀態'])+'</span>' : '';
+    var meta='';
+    if(x['日期時間']){
+      var dstr = dt&&!isNaN(dt) ? (dt.getFullYear()+' 年 '+String(dt.getMonth()+1).padStart(2,'0')+' 月 '+String(dt.getDate()).padStart(2,'0')+' 日'+(isNaN(dt.getDay())?'':'（'+wd[dt.getDay()]+'）')) : acEsc(x['日期時間']);
+      meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'+dstr+'</div>';
+      if(dt&&!isNaN(dt)&&(dt.getHours()||dt.getMinutes())) meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>'+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0')+'</div>';
+    }
+    if(x['地點']) meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+acEsc(x['地點'])+'</div>';
+    if(x['費用']) meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'+acEsc(x['費用'])+'</div>';
+    var btn = (x['報名連結'] && !done) ? '<div style="display:flex;gap:12px;flex-wrap:wrap"><a href="'+acEsc(x['報名連結'])+'?openExternalBrowser=1" target="_blank" rel="noopener" class="btn btn-primary">立即報名</a></div>'
+            : (x['報名連結'] ? '<div style="display:flex;gap:12px;flex-wrap:wrap"><a href="'+acEsc(x['報名連結'])+'?openExternalBrowser=1" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:var(--gray-200);color:var(--gray-500)">查看報名表單</a></div>' : '');
+    var side = dt&&!isNaN(dt) ? '<div class="feat-side"><div><div class="date-big">'+dt.getDate()+'</div><div class="date-month">'+mN[dt.getMonth()]+' '+dt.getFullYear()+'</div><div class="date-wd">'+wd[dt.getDay()]+'</div></div></div>' : '';
+    return '<div class="feat-event" style="margin-bottom:16px"><div class="feat-body">'
+      +'<div class="badge badge-red">'+acEsc(x['活動名稱'])+'</div>'
+      +(statusHTML?'<div style="margin-bottom:10px">'+statusHTML+'</div>':'')
+      +'<h3>'+acEsc(x['活動名稱'])+'</h3>'
+      +'<div class="evt-meta">'+meta+'</div>'+btn
+      +(x['備註']?'<p style="font-size:13px;color:var(--gray-500);margin-top:10px">'+acEsc(x['備註'])+'</p>':'')
+      +'</div>'+side+'</div>';
+  }).join('');
+}
+(function loadActivities(){
+  fetch(ACTIVITIES_API + '&t=' + Date.now())
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var rows = Array.isArray(data) ? data : (data.data || data.rows || []);
+      acRender(rows.length ? rows : activitiesFallback);
+    })
+    .catch(function(){ acRender(activitiesFallback); });
 })();
 
 // ─────────────────────────────────────────────
