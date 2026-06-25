@@ -716,6 +716,153 @@ tr.hidden{display:none}
   .side-nav{display:none}
   body{padding-left:0!important}
 }
+
+/* ── RECRUIT BANNER (RECRUIT_4K9MZ2WX) ── */
+.recruit-banner{
+  background:var(--red);
+  position:relative;
+  overflow:hidden;
+  padding:52px 0 48px;
+}
+/* 幾何裝飾圓（右上、左下） */
+.recruit-banner::before{
+  content:"";position:absolute;top:-70px;right:-70px;
+  width:260px;height:260px;border-radius:50%;
+  background:rgba(255,255,255,.06);pointer-events:none;
+}
+.recruit-banner::after{
+  content:"";position:absolute;bottom:-60px;left:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.recruit-inner{
+  position:relative;z-index:1;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;
+}
+.recruit-copy{flex:1}
+.recruit-eyebrow{
+  display:inline-block;font-size:11px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(255,255,255,.7);margin-bottom:10px;
+}
+.recruit-title{
+  font-family:"Noto Serif TC",serif;
+  font-size:clamp(22px,3.5vw,34px);font-weight:700;
+  color:#fff;line-height:1.25;margin-bottom:10px;letter-spacing:-.01em;
+}
+.recruit-sub{
+  font-size:15px;color:rgba(255,255,255,.82);
+  line-height:1.7;max-width:560px;
+}
+.recruit-action{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+/* CTA 按鈕：白底紅字，大型易點 */
+.recruit-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:#fff;color:var(--red);
+  padding:18px 40px;border-radius:var(--r-md);
+  font-size:16px;font-weight:700;letter-spacing:.02em;
+  border:none;cursor:pointer;
+  box-shadow:0 4px 20px rgba(0,0,0,.18);
+  transition:all .18s;
+  white-space:nowrap;
+  font-family:"Noto Sans TC",sans-serif;
+}
+.recruit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(0,0,0,.24);
+  color:var(--red-dark);
+}
+.recruit-btn svg{width:18px;height:18px;stroke:var(--red);fill:none;stroke-width:2.5;flex-shrink:0;transition:stroke .18s}
+.recruit-btn:hover svg{stroke:var(--red-dark)}
+.recruit-note{
+  font-size:12px;color:rgba(255,255,255,.65);text-align:center;line-height:1.5;
+}
+
+/* RWD：手機版垂直排列 */
+@media(max-width:700px){
+  .recruit-inner{flex-direction:column;align-items:flex-start}
+  .recruit-action{width:100%;align-items:stretch}
+  .recruit-btn{width:100%;justify-content:center;padding:18px 24px}
+  .recruit-note{text-align:left}
+}
+@media(max-width:375px){
+  .recruit-banner{padding:40px 0 36px}
+  .recruit-btn{font-size:15px}
+}
+
+/* ── RECRUIT MODAL ── */
+.recruit-modal-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(26,31,41,.6);
+  z-index:500;
+  align-items:center;justify-content:center;
+  padding:24px;
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.recruit-modal-overlay.open{display:flex}
+.recruit-modal{
+  background:#fff;border-radius:var(--r-lg);
+  max-width:440px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,.22);
+  overflow:hidden;
+  animation:modalIn .22s cubic-bezier(.34,1.3,.64,1);
+}
+@keyframes modalIn{
+  from{opacity:0;transform:scale(.94) translateY(8px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.recruit-modal-head{
+  background:var(--red);padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.recruit-modal-head-title{
+  font-family:"Noto Serif TC",serif;
+  font-size:17px;font-weight:700;color:#fff;
+}
+.recruit-modal-close{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.2);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;line-height:1;
+  transition:background .15s;flex-shrink:0;
+  font-family:sans-serif;
+}
+.recruit-modal-close:hover{background:rgba(255,255,255,.35)}
+.recruit-modal-body{padding:28px 24px 32px}
+.recruit-modal-icon{
+  display:flex;align-items:center;justify-content:center;
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(207,32,48,.08);margin:0 auto 16px;
+}
+.recruit-modal-icon svg{width:28px;height:28px;stroke:var(--red);fill:none;stroke-width:2}
+.recruit-modal-msg{
+  text-align:center;
+  font-size:15px;color:var(--gray-700,#3d4555);
+  line-height:1.75;
+}
+.recruit-modal-msg strong{color:var(--gray-900);font-weight:600}
+.recruit-modal-hint{
+  margin-top:16px;padding:12px 16px;
+  background:var(--gray-50);border-radius:var(--r-sm);
+  font-size:13px;color:var(--gray-600);line-height:1.6;text-align:center;
+}
+.recruit-modal-footer{
+  padding:0 24px 24px;display:flex;justify-content:center;
+}
+.recruit-modal-ok{
+  display:inline-flex;align-items:center;
+  background:var(--red);color:#fff;
+  padding:11px 32px;border-radius:var(--r-sm);
+  font-size:14px;font-weight:600;
+  border:none;cursor:pointer;font-family:"Noto Sans TC",sans-serif;
+  transition:background .15s;
+}
+.recruit-modal-ok:hover{background:var(--red-dark)}
 </style>
 </head>
 <body>
@@ -828,6 +975,65 @@ tr.hidden{display:none}
       <div class="stat-item"><div class="stat-num">白金</div><div class="stat-lbl">分會等級</div></div>
       <div class="stat-item"><div class="stat-num">2026</div><div class="stat-lbl">成會年份</div></div>
       <div class="stat-item"><div class="stat-num">5 <span class="u">條</span></div><div class="stat-lbl">產業鏈</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── RECRUIT BANNER (RECRUIT_4K9MZ2WX) ──
+     招募區塊：不加 section id，不納入左側 scrollspy 導覽，
+     是行動呼籲橫幅而非內容區塊。
+     ─────────────────────────────────────────────────────────
+     【之後接真實報名頁方式】
+     把下方 <button> 整個換成：
+       <a href="https://YOUR_GUEST_SIGNUP_URL" target="_blank" rel="noopener" class="recruit-btn">
+         <svg ...>...</svg>立即報名來賓
+       </a>
+     同時移除 onclick="openRecruitModal()" 及整個 #recruitModal div，
+     即可完成串接，無需改動其他地方。
+     ─────────────────────────────────────────────────────────
+-->
+<div class="recruit-banner">
+  <div class="container">
+    <div class="recruit-inner">
+      <div class="recruit-copy">
+        <div class="recruit-eyebrow">Join Hua Urban+</div>
+        <h2 class="recruit-title">對華都更有興趣嗎？<br>一起把人脈變成共同把事情做成的力量</h2>
+        <p class="recruit-sub">華都更聚焦都市更新與老屋改建產業鏈，整合地主、設計、建材、法律、金融等跨業夥伴，透過互相推薦創造真實商機。如果你也在這條產業鏈上，歡迎了解如何以來賓身份參與我們的線上例會。</p>
+      </div>
+      <div class="recruit-action">
+        <!-- TODO: 之後把這顆 <button> 換成 <a href="官方來賓報名頁網址" target="_blank" class="recruit-btn"> 並移除彈窗 -->
+        <button class="recruit-btn" onclick="openRecruitModal()">
+          <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          我要報名來賓
+        </button>
+        <p class="recruit-note">歡迎推薦優質夥伴，一同參與線上例會</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── RECRUIT MODAL ── -->
+<div class="recruit-modal-overlay" id="recruitModal" onclick="closeRecruitModal(event)">
+  <div class="recruit-modal" role="dialog" aria-modal="true" aria-labelledby="recruitModalTitle">
+    <div class="recruit-modal-head">
+      <span class="recruit-modal-head-title" id="recruitModalTitle">來賓報名</span>
+      <button class="recruit-modal-close" onclick="closeRecruitModal()" aria-label="關閉">&#x2715;</button>
+    </div>
+    <div class="recruit-modal-body">
+      <div class="recruit-modal-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="recruit-modal-msg">
+        <strong>哎呀，你太快了！🏃‍♂️💨</strong><br>
+        這顆按鈕比瓊安的進度還快一步。
+      </div>
+      <div class="recruit-modal-hint">
+        報名系統還在施工中，資訊長正在熬夜趕工（咖啡已續第三杯 ☕）。<br>
+        手刀想加入的話，先到分會 <strong>LINE 群</strong>敲一聲、或找你的引薦人卡位，<br>不用等系統，人脈先連起來再說！
+      </div>
+    </div>
+    <div class="recruit-modal-footer">
+      <button class="recruit-modal-ok" onclick="closeRecruitModal()">好，我先去敲 LINE 👌</button>
     </div>
   </div>
 </div>
@@ -1047,15 +1253,25 @@ tr.hidden{display:none}
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           </div>
           <div>
-            <div style="font-size:16px;font-weight:700;color:var(--gray-900);margin-bottom:8px">MSP（Member Success Program）</div>
+            <div style="font-size:16px;font-weight:700;color:var(--gray-900);margin-bottom:8px">MSP（Member Success Program）會員成功培訓</div>
             <div style="font-size:14px;color:var(--gray-600);line-height:1.8">
-              MSP 為新會員入會 6 週內的必修培訓，協助夥伴快速掌握 BNI 運作規則、提升推薦品質。
+              MSP 是 BNI 的核心基礎培訓，被稱為「BNI 使用說明書」，協助新會員快速掌握 BNI 運作規則、一對一引薦技巧與五大系統。<strong style="color:var(--gray-800)">建議新會員入會後 6 週內完成。</strong>
             </div>
             <div style="margin-top:12px;font-size:14px;color:var(--gray-600);line-height:1.8">
-              課程主題由教育協調 <strong style="color:var(--gray-800)">陳靖薇</strong> 規劃，最新場次請見上方行事曆或分會公告。
+              MSP 由 <strong style="color:var(--gray-800)">BNI 地區辦公室統一排課</strong>、跨分會共同上課，非本分會自辦。可透過下列兩種方式完成：
             </div>
-            <div style="margin-top:16px;display:inline-flex;align-items:center;gap:6px;background:rgba(30,111,191,.07);border:1px solid rgba(30,111,191,.15);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:600;color:#1E6FBF">
-              課程場次待公告，請留意行事曆更新
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+              <a href="https://www.mybni.com?openExternalBrowser=1" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:var(--red);color:#fff;font-size:14px;font-weight:600;padding:11px 20px;border-radius:var(--r-md);width:fit-content;transition:background .15s">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                線上自學版 — 前往 BNI Academy 上課
+              </a>
+              <div style="font-size:13px;color:var(--gray-400);line-height:1.7">
+                登入 <strong>www.mybni.com</strong>（使用 BNI Connect 帳密），進入 BNI Academy 找到 Member Success Program 即可開始；完成後系統自動同步至 BNI Connect 培訓記錄。
+              </div>
+            </div>
+            <div style="margin-top:14px;display:inline-flex;align-items:flex-start;gap:8px;background:rgba(30,111,191,.07);border:1px solid rgba(30,111,191,.15);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:#1E6FBF;line-height:1.6">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              <span><strong>實體講師班</strong>由地區辦公室排課，時間請留意分會 LINE 群或例會公告。</span>
             </div>
           </div>
         </div>
@@ -1536,6 +1752,26 @@ function filterR(){
     });
   });
 })();
+
+// ─────────────────────────────────────────────
+// RECRUIT MODAL (RECRUIT_4K9MZ2WX)
+// 未來接真實報名頁時：移除 openRecruitModal/closeRecruitModal 兩函式
+// 並把 HTML 裡的 <button onclick="openRecruitModal()"> 換成 <a href="...">
+// ─────────────────────────────────────────────
+function openRecruitModal(){
+  var m=document.getElementById('recruitModal');
+  if(m){m.classList.add('open');document.body.style.overflow='hidden';}
+}
+function closeRecruitModal(e){
+  // 若傳了事件，只在點背景（overlay 本身）時關閉，點 modal 內部不關
+  if(e && e.target!==document.getElementById('recruitModal')) return;
+  var m=document.getElementById('recruitModal');
+  if(m){m.classList.remove('open');document.body.style.overflow='';}
+}
+// ESC 鍵關閉
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') closeRecruitModal();
+});
 
 // ─────────────────────────────────────────────
 // Nav active highlight on scroll
