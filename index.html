@@ -2606,7 +2606,14 @@ function acMapFromCalendar(rows){
       '費用': '',
       '報名連結': r['連結']||'',
       '報名截止': '',
-      '狀態': '即將舉行',
+      '狀態': (function(){
+        var today = new Date(); today.setHours(0,0,0,0);
+        var actDate = r['日期'] ? new Date(String(r['日期']).substring(0,10)+'T00:00:00') : null;
+        if(!actDate || isNaN(actDate)) return '即將舉行';
+        if(actDate < today) return '已結束';
+        if(actDate.getTime() === today.getTime()) return '今日舉行';
+        return '即將舉行';
+      }()),
       '備註': ''                          // 不再倒整段備註進卡片
     };
   });
