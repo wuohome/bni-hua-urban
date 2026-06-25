@@ -489,6 +489,8 @@ tr.hidden{display:none}
 .hero-slide[data-img]:not([data-img=""]) .photo-icon,
 .hero-slide[data-img]:not([data-img=""]) .photo-text,
 .hero-slide[data-img]:not([data-img=""]) .size-badge{display:none}
+/* 完整介紹卡（16:9 設計圖）：用 contain 完整顯示不裁切，深色底襯 */
+.hero-slide.has-photo-contain{background-size:contain;background-color:#1a1a1a}
 /* 箭頭按鈕 */
 .carousel-btn{
   position:absolute;top:50%;transform:translateY(-50%);
@@ -780,21 +782,9 @@ tr.hidden{display:none}
            ════════════════════════════════════════ -->
       <div class="hero-slides-track">
 
-        <!-- 第 1 張：董事顧問 邱愛莉 -->
-        <!-- 放照片：把 data-img="" 改成 data-img="assets/邱愛莉.jpg" -->
-        <div class="hero-slide active" data-img="">
-          <div class="photo-banner">董事顧問 邱愛莉（請置入照片）</div>
-          <div class="photo-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
-          </div>
-          <div class="photo-text">
-            <h3>董事顧問 邱愛莉</h3>
-            <p>請置入照片</p>
-          </div>
-          <div class="size-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-            建議尺寸 1600 × 900 px（16:9）
-          </div>
+        <!-- 第 1 張：董事顧問 邱碩鈺 Ellie（已置入照片 assets/ellie.png，完整顯示用 contain）-->
+        <div class="hero-slide active has-photo-contain" data-img="assets/ellie.png">
+          <div class="photo-banner">董事顧問 邱碩鈺 Ellie Chiu</div>
         </div>
 
         <!-- 第 2 張：第一屆九長領導團隊 -->
