@@ -2217,12 +2217,36 @@ function acRender(list){
       +'</div>'+side+'</div>';
   }).join('');
 }
+// 活動詳情改讀「行事曆」分頁，過濾類型=活動（單一資料源，與月曆同步，不再讀獨立「活動」分頁）
+// 行事曆欄位（日期/類型/名稱/連結/備註）→ acRender 要的欄位（活動名稱/日期時間/…）
+function acMapFromCalendar(rows){
+  return (rows||[]).filter(function(r){
+    return /活動|聚會|例會|來賓/.test(r['類型']||'') || /聚會|例會|來賓日|活動/.test(r['名稱']||'');
+  }).map(function(r){
+    var today=new Date(); today.setHours(0,0,0,0);
+    var d=r['日期']?new Date(String(r['日期']).substring(0,10)):null;
+    var done = d && !isNaN(d) && d < today;
+    return {
+      '活動名稱': r['名稱']||'',
+      '日期時間': r['日期']||'',
+      '地點': '',                        // 行事曆無地點欄，留空（卡片自動不顯示）
+      '費用': '',
+      '報名連結': r['連結']||'',
+      '報名截止': '',
+      '狀態': done ? '已結束' : '即將舉行',
+      '備註': r['備註']||''
+    };
+  });
+}
 (function loadActivities(){
-  fetch(ACTIVITIES_API + '&t=' + Date.now())
+  // 讀行事曆分頁（與月曆同一份）
+  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('行事曆') + '&t=' + Date.now();
+  fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(data){
       var rows = Array.isArray(data) ? data : (data.data || data.rows || []);
-      acRender(rows.length ? rows : activitiesFallback);
+      var acts = acMapFromCalendar(rows);
+      acRender(acts.length ? acts : activitiesFallback);
     })
     .catch(function(){ acRender(activitiesFallback); });
 })();
