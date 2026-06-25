@@ -521,6 +521,105 @@ tr.hidden{display:none}
   .carousel-prev{left:8px}
   .carousel-next{right:8px}
 }
+
+/* ── SIDE NAV v2 (SIDENAV2_7BNX3QM4) ── */
+/*
+  桌面（≥1100px）：
+  · body 加 padding-left:196px 讓主內容整體右移，側欄在左側 fixed 160px 寬。
+  · 7 個區塊文字直接顯示，一眼掃清全站結構。
+  · 目前區塊：紅點 + 紅字 + 粗體。其他：灰點 + 灰字。
+  · scrollspy 保留。點擊平滑捲動保留。
+  手機（<1100px）：側欄隱藏，body padding-left 恢復 0，原有頂部 nav 照舊。
+*/
+
+/* 桌面：主內容右移 */
+@media(min-width:1100px){
+  body{padding-left:188px}
+}
+
+.side-nav{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:180px;
+  z-index:90;
+  display:none; /* 預設隱藏；桌面 media 打開 */
+  flex-direction:column;
+  justify-content:center;
+  padding:80px 0 40px 20px; /* 頂部讓開 navbar */
+  background:transparent;
+}
+@media(min-width:1100px){
+  .side-nav{display:flex}
+}
+
+/* 垂直連接線 */
+.side-nav-track{
+  position:absolute;
+  left:28px; /* 圓點中心對齊 */
+  top:90px;
+  bottom:50px;
+  width:1.5px;
+  background:var(--gray-200);
+  border-radius:2px;
+  pointer-events:none;
+}
+
+/* 每個節點 */
+.side-nav-item{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:9px 0;
+  cursor:pointer;
+  text-decoration:none;
+  color:var(--gray-400);
+  transition:color .18s;
+}
+.side-nav-item:hover{color:var(--gray-700,#3d4555)}
+
+/* 圓點 */
+.sn-dot{
+  flex-shrink:0;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  border:1.5px solid var(--gray-300);
+  background:var(--white);
+  transition:border-color .18s, background .18s, box-shadow .18s;
+  position:relative;
+  z-index:1;
+}
+.side-nav-item:hover .sn-dot{
+  border-color:var(--gray-500,#7a8290);
+}
+.side-nav-item.sn-active .sn-dot{
+  border-color:var(--red);
+  background:var(--red);
+  box-shadow:0 0 0 3px rgba(207,32,48,.15);
+}
+
+/* 文字標籤（直接顯示，不是 tooltip） */
+.sn-label{
+  font-size:12px;
+  font-weight:400;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  line-height:1.2;
+  transition:font-weight .18s, color .18s;
+}
+.side-nav-item.sn-active .sn-label{
+  color:var(--red);
+  font-weight:700;
+}
+
+/* RWD：手機隱藏側欄 */
+@media(max-width:1099px){
+  .side-nav{display:none}
+  body{padding-left:0!important}
+}
 </style>
 </head>
 <body>
@@ -650,7 +749,7 @@ tr.hidden{display:none}
 </div>
 
 <!-- ── ABOUT ── -->
-<section class="about">
+<section class="about" id="about">
   <div class="container">
     <div class="about-grid">
       <div>
@@ -1281,6 +1380,44 @@ function filterR(){
 }
 
 // ─────────────────────────────────────────────
+// Side Nav scrollspy (SIDENAV_4KW9PX2R)
+// ─────────────────────────────────────────────
+(function(){
+  var snItems = document.querySelectorAll('.side-nav-item[data-target]');
+  if(!snItems.length) return;
+
+  function snActivate(id){
+    snItems.forEach(function(a){
+      a.classList.toggle('sn-active', a.dataset.target === id);
+    });
+  }
+
+  var snSections = Array.from(snItems).map(function(a){
+    return document.getElementById(a.dataset.target);
+  }).filter(Boolean);
+
+  // IntersectionObserver: 偵測哪個 section 進入視窗上半部
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        snActivate(entry.target.id);
+      }
+    });
+  },{rootMargin:'-10% 0px -60% 0px', threshold:0});
+
+  snSections.forEach(function(s){ observer.observe(s); });
+
+  // 點擊平滑捲動
+  snItems.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var el = document.getElementById(a.dataset.target);
+      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+})();
+
+// ─────────────────────────────────────────────
 // Nav active highlight on scroll
 // ─────────────────────────────────────────────
 var navAs=document.querySelectorAll('.nav-list a:not(.nav-cta)');
@@ -1297,5 +1434,38 @@ window.addEventListener('scroll',function(){
   });
 });
 </script>
+
+<!-- ── SIDE NAV HTML (SIDENAV_4KW9PX2R) ── -->
+<nav class="side-nav" aria-label="頁面導覽">
+  <div class="side-nav-track"></div>
+  <a class="side-nav-item" data-target="about" href="#about">
+    <span class="sn-dot"></span>
+    <span class="sn-label">分會簡介</span>
+  </a>
+  <a class="side-nav-item" data-target="zoom" href="#zoom">
+    <span class="sn-dot"></span>
+    <span class="sn-label">線上例會</span>
+  </a>
+  <a class="side-nav-item" data-target="calendar" href="#calendar">
+    <span class="sn-dot"></span>
+    <span class="sn-label">行事曆</span>
+  </a>
+  <a class="side-nav-item" data-target="activities" href="#activities">
+    <span class="sn-dot"></span>
+    <span class="sn-label">活動詳情</span>
+  </a>
+  <a class="side-nav-item" data-target="msp" href="#msp">
+    <span class="sn-dot"></span>
+    <span class="sn-label">MSP 課程</span>
+  </a>
+  <a class="side-nav-item" data-target="powerteam" href="#powerteam">
+    <span class="sn-dot"></span>
+    <span class="sn-label">Power Team</span>
+  </a>
+  <a class="side-nav-item" data-target="roster" href="#roster">
+    <span class="sn-dot"></span>
+    <span class="sn-label">夥伴名冊</span>
+  </a>
+</nav>
 </body>
 </html>
