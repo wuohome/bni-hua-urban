@@ -60,8 +60,42 @@ a{text-decoration:none;color:inherit}
 .mobile-nav ul a{display:block;padding:12px 0;font-size:16px;font-weight:500;color:var(--gray-600);border-bottom:1px solid var(--gray-100)}
 .m-cta{display:block;margin-top:16px;text-align:center;background:var(--red);color:#fff;font-size:15px;font-weight:600;padding:12px;border-radius:var(--r-sm)}
 
-/* ── HERO ── */
-.hero{background:var(--white);padding:48px 0 0;overflow:hidden}
+/* ── HERO v2（影片主視覺）── */
+/* 第 1 項：品牌 banner 列 */
+.hero{background:var(--white);padding:0;overflow:hidden}
+.hero-brand-banner{
+  background:var(--white);
+  border-bottom:1px solid var(--gray-100);
+  padding:10px 0;
+}
+.hero-brand-inner{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.hero-brand-title{
+  font-family:"Noto Serif TC",serif;
+  font-size:17px;font-weight:700;color:var(--gray-900);
+  letter-spacing:-.01em;white-space:nowrap;
+}
+.hero-brand-sub{
+  font-size:13px;font-weight:600;color:var(--red);white-space:nowrap;
+}
+.hero-brand-slogan{
+  font-size:12px;color:var(--gray-400);white-space:nowrap;
+}
+.hero-brand-divider{
+  width:1px;height:16px;background:var(--gray-200);flex-shrink:0;
+}
+/* 第 1 項：影片主視覺區 */
+.hero-video-wrap{
+  position:relative;width:100%;aspect-ratio:16/9;
+  background:#000;overflow:hidden;
+}
+.hero-video-wrap iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:0;
+}
+/* 第 2 屏：董顧介紹容器 */
+.dc-section{background:var(--white);padding:0;}
+/* 保留 hero-strip 供其他用途 */
 .hero-strip{text-align:center;margin-bottom:32px}
 .chapter-label{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.18em;color:var(--red);text-transform:uppercase;margin-bottom:12px}
 .hero-title{font-family:"Noto Serif TC",serif;font-size:clamp(28px,5vw,48px);font-weight:700;color:var(--gray-900);line-height:1.2;letter-spacing:-.02em;margin-bottom:6px}
@@ -76,7 +110,8 @@ a{text-decoration:none;color:inherit}
 .size-badge{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:5px 14px;font-size:12px;font-weight:500;color:var(--gray-600)}
 
 /* ── STAT BAR ── */
-.stat-bar{background:var(--red)}
+/* 第 2 項：overflow:hidden 裁掉裝飾圓圈半截 */
+.stat-bar{background:var(--red);overflow:hidden;position:relative}
 .stat-inner{display:grid;grid-template-columns:repeat(4,1fr)}
 .stat-item{padding:24px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.15)}
 .stat-item:last-child{border-right:none}
@@ -261,6 +296,19 @@ a{text-decoration:none;color:inherit}
 .mini-num.gd{color:var(--gold)}
 .mini-desc{font-size:12px;color:var(--gray-600);font-weight:500}
 
+/* 第 3 項：關於分會圖片佔位框（比照九長輪播風格，橫式 16:9） */
+.about-photo-placeholder{
+  position:relative;
+  width:100%;
+  aspect-ratio:16/9;
+  background:var(--gray-50);
+  border:2px dashed var(--gray-200);
+  border-radius:var(--r-lg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  overflow:hidden;
+  min-height:160px;
+}
+
 /* ── 分會介紹影片 (INTRO_VIDEO_5KP3) ── */
 .about-video{margin-top:56px}
 .av-head{text-align:center;margin-bottom:24px}
@@ -433,6 +481,16 @@ tr.hidden{display:none}
 .g-d{background:rgba(99,130,200,.07);color:#4A63C8;border:1px solid rgba(99,130,200,.2)}
 .g-e{background:rgba(214,158,46,.1);color:#C49A17;border:1px solid rgba(214,158,46,.2)}
 .no-result{text-align:center;padding:40px;color:var(--gray-400);font-size:14px;display:none}
+/* 第 7 項：幹部職務標籤 pill */
+.m-role{
+  display:inline-block;
+  font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:100px;
+  margin-left:6px;vertical-align:middle;
+  white-space:nowrap;
+}
+.m-role-chief{background:var(--red);color:#fff}
+.m-role-gold{background:#B8963E;color:#fff}
 
 /* ── FOOTER ── */
 .footer{background:var(--gray-900);color:rgba(255,255,255,.7);padding:48px 0 24px;border-top:3px solid var(--red)}
@@ -476,6 +534,7 @@ tr.hidden{display:none}
   .stat-item:nth-child(2){border-right:none}
   .stat-item:nth-child(3){border-bottom:none}
   .stat-item:nth-child(4){border-right:none;border-bottom:none}
+  .hero-brand-slogan{display:none}
   .about-grid{grid-template-columns:1fr;gap:32px}
   .cal-row{grid-template-columns:72px 1fr;gap:12px}
   .cal-action{display:none}
@@ -1058,6 +1117,25 @@ tr.hidden{display:none}
   transition:color .18s ease, transform .18s ease;
 }
 .tf-card:hover .tf-go{color:var(--red);transform:translateX(3px)}
+/* 第 5 項：培訓類型篩選排（動態生成） */
+.tf-type-tabs{
+  display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;
+}
+.tf-type-tab{
+  font-family:inherit;font-size:12px;font-weight:600;
+  color:var(--gray-500);background:var(--white);
+  border:1px solid var(--gray-200);border-radius:100px;
+  padding:5px 14px;cursor:pointer;transition:all .15s ease;
+}
+.tf-type-tab:hover{color:var(--gray-800);border-color:var(--gray-300)}
+.tf-type-tab.active{color:var(--red);border-color:rgba(207,32,48,.5);background:rgba(207,32,48,.05)}
+/* 第 5 項：學分標籤 */
+.tf-credit{
+  display:inline-block;font-size:10px;font-weight:700;
+  padding:1px 8px;border-radius:100px;
+  background:rgba(184,150,62,.12);color:#8c6e00;
+  border:1px solid rgba(184,150,62,.3);
+}
 .tf-note{
   display:flex;
   align-items:flex-start;
@@ -1352,15 +1430,35 @@ tr.hidden{display:none}
 </div>
 
 <!-- ── HERO ── -->
-<section class="hero">
-  <div class="container">
-    <div class="hero-strip">
-      <div class="chapter-label">第一屆 · 2026 正式成會</div>
-      <h1 class="hero-title">BNI 華都更分會</h1>
-      <div class="hero-sub">Hua Urban+</div>
-      <div class="hero-slogan">都市更新 · 產業整合 · 夥伴共榮</div>
+<!-- 第 1 項：第一屏改成影片主視覺，品牌標題壓成 banner 列 -->
+<section class="hero" id="hero-video-sec">
+  <!-- 品牌標題列（精簡 banner，不刪標題） -->
+  <div class="hero-brand-banner">
+    <div class="container">
+      <div class="hero-brand-inner">
+        <div class="chapter-label" style="margin-bottom:0">第一屆 · 2026 正式成會</div>
+        <span class="hero-brand-divider"></span>
+        <span class="hero-brand-title">BNI 華都更分會</span>
+        <span class="hero-brand-sub">Hua Urban+</span>
+        <span class="hero-brand-slogan">都市更新 · 產業整合 · 夥伴共榮</span>
+      </div>
     </div>
-    <!-- CAROUSEL_XQ47W9LB — 兩張照片輪播，2026-06-25 -->
+  </div>
+  <!-- 主視覺影片 -->
+  <div class="hero-video-wrap">
+    <iframe src="https://www.youtube.com/embed/h_OW0u4A59k?si=ONCZzmpdrWWnLmc5&rel=0"
+            title="BNI 華都更分會 — 愛濃那愛，真心動起來"
+            loading="lazy"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen></iframe>
+  </div>
+</section>
+
+<!-- ── 第 2 屏：董顧介紹（原 Hero Carousel 第 1 張 DC_CARD）── -->
+<section class="dc-section">
+  <div class="container">
     <div class="photo-wrap" id="heroCarousel">
 
       <!-- ════════════════════════════════════════
@@ -1435,6 +1533,7 @@ tr.hidden{display:none}
 </section>
 
 <!-- ── STAT BAR ── -->
+<!-- 第 2 項：overflow:hidden 已在下方 stat-bar 容器補上，見 CSS 修改 -->
 <div class="stat-bar">
   <div class="container">
     <div class="stat-inner">
@@ -1577,31 +1676,24 @@ tr.hidden{display:none}
           <p>我們相信，當對的人聚在一起，每一棟老屋都有機會成為下一個精彩的故事。</p>
         </div>
       </div>
-      <div class="stats-2x2">
-        <div class="mini-stat"><div class="mini-num">#1</div><div class="mini-desc">都更主題 BNI 分會</div></div>
-        <div class="mini-stat"><div class="mini-num gd">100%</div><div class="mini-desc">線上出席彈性</div></div>
-        <div class="mini-stat"><div class="mini-num">5+</div><div class="mini-desc">核心產業整合</div></div>
-        <div class="mini-stat"><div class="mini-num">週會</div><div class="mini-desc">固定交流機制</div></div>
+      <!-- 第 3 項：四格小卡改為圖片佔位框（雙軌協作機制圖，∞ 符號橫式圖） -->
+      <div class="about-photo-placeholder">
+        <div class="photo-banner">雙軌協作機制圖（請置入照片）</div>
+        <div class="photo-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+        </div>
+        <div class="photo-text">
+          <h3>雙軌協作機制圖</h3>
+          <p>∞ 無限符號協作說明</p>
+        </div>
+        <div class="size-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          建議尺寸 1200 × 675 px（16:9 橫式）
+        </div>
       </div>
     </div>
 
-    <!-- ── 分會介紹影片（官方 YouTube 嵌入 INTRO_VIDEO_5KP3）── -->
-    <div class="about-video">
-      <div class="av-head">
-        <span class="av-label">分會介紹影片</span>
-        <h3 class="av-title">要讓都更，真正動起來</h3>
-        <p class="av-sub">用 2 分鐘認識華都更分會的理念與夥伴</p>
-      </div>
-      <div class="av-frame">
-        <iframe src="https://www.youtube.com/embed/h_OW0u4A59k?si=ONCZzmpdrWWnLmc5&rel=0"
-                title="華都更 - 要讓都更真正動起來"
-                loading="lazy"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen></iframe>
-      </div>
-    </div>
+    <!-- 影片已移至首屏主視覺，此處不再重複 -->
   </div>
 </section>
 
@@ -1738,8 +1830,9 @@ tr.hidden{display:none}
       <div class="ac-loading" style="font-size:14px;color:var(--gray-400);padding:18px 0">活動資料載入中…</div>
     </div>
     <p style="font-size:13px;color:var(--gray-400);margin-top:12px;text-align:center">更多活動請見上方行事曆</p>
+    <!-- 第 4c 項：修正編輯按鈕連結，target="_blank" -->
     <div class="admin-edit">
-      <a href="#">
+      <a href="https://docs.google.com/spreadsheets/d/1XcSJ_U6i6kIHruHObblZEVQEd7d4M0X8LNGG9Oftgd0/edit" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         編輯活動資料（活動組）
       </a>
@@ -1766,12 +1859,14 @@ tr.hidden{display:none}
       <a href="https://bntw.niiice-design.com/news-category/training/?openExternalBrowser=1" target="_blank" rel="noopener" class="tf-alllink">看全部培訓 →</a>
     </div>
 
-    <!-- 線上 / 線下 分頁標籤 -->
+    <!-- 線上 / 線下 分頁標籤（第 5 項：形式篩選） -->
     <div class="tf-tabs" role="tablist">
       <button class="tf-tab active" data-mode="all" type="button">全部 <span class="tf-tab-count">0</span></button>
       <button class="tf-tab" data-mode="online" type="button">線上 Zoom <span class="tf-tab-count">0</span></button>
       <button class="tf-tab" data-mode="offline" type="button">線下實體 <span class="tf-tab-count">0</span></button>
     </div>
+    <!-- 第 5 項：培訓類型篩選（動態生成，由 JS 掃卡片標題後產生按鈕） -->
+    <div class="tf-type-tabs" id="tfTypeTabs" role="tablist" aria-label="培訓類型篩選"></div>
 
     <div id="trainingList" class="tf-list">
       <div class="tf-loading">培訓資訊載入中…</div>
@@ -1798,10 +1893,10 @@ tr.hidden{display:none}
       <div class="chain ca">
         <div class="chain-badge">A</div>
         <div class="chain-name">A 地主改建整合鏈</div>
+        <!-- 第 6 項：移除「地點：Zoom」重複行，下次組聚那行已含 Zoom -->
         <div class="chain-meta">
           <div><strong>召集人：</strong>柳慧燕</div>
           <div><strong>下次組聚：</strong><span class="chain-next" data-chain="A">（時間待定）</span></div>
-          <div><strong>地點：</strong>Zoom</div>
         </div>
       </div>
       <!-- B 老屋現金流升級鏈 -->
@@ -1811,7 +1906,6 @@ tr.hidden{display:none}
         <div class="chain-meta">
           <div><strong>召集人：</strong>陳靖薇</div>
           <div><strong>下次組聚：</strong><span class="chain-next" data-chain="B">（時間待定）</span></div>
-          <div><strong>地點：</strong>Zoom</div>
         </div>
       </div>
       <!-- C 高齡安居 × 資產傳承產業鏈 -->
@@ -1821,7 +1915,6 @@ tr.hidden{display:none}
         <div class="chain-meta">
           <div><strong>召集人：</strong>王春雄 Jayson</div>
           <div><strong>下次組聚：</strong><span class="chain-next" data-chain="C">（時間待定）</span></div>
-          <div><strong>地點：</strong>Zoom</div>
         </div>
       </div>
       <!-- D 商用不動產升級鏈 -->
@@ -1831,7 +1924,6 @@ tr.hidden{display:none}
         <div class="chain-meta">
           <div><strong>召集人：</strong>陳向柔 Naomi</div>
           <div><strong>下次組聚：</strong><span class="chain-next" data-chain="D">（時間待定）</span></div>
-          <div><strong>地點：</strong>Zoom</div>
         </div>
       </div>
       <!-- E 房產客戶成長鏈 -->
@@ -1841,7 +1933,6 @@ tr.hidden{display:none}
         <div class="chain-meta">
           <div><strong>召集人：</strong>張瓊安</div>
           <div><strong>下次組聚：</strong><span class="chain-next" data-chain="E">（時間待定）</span></div>
-          <div><strong>地點：</strong>Zoom</div>
         </div>
       </div>
     </div>
@@ -1872,70 +1963,73 @@ tr.hidden{display:none}
     </div>
     <div class="tbl-wrap">
       <table id="rTbl">
+        <!-- 第 7 項：加職務欄顯示位置（資料從後台 Sheet 名冊分頁「職務」欄讀取，有值才顯示標籤） -->
         <thead><tr><th>編號</th><th>姓名</th><th>專業別</th></tr></thead>
         <tbody>
-          <tr data-n="王常殷Hubert" data-p="都更危老建設-新竹地區"><td><span class="m-num">01</span></td><td><span class="m-name">王常殷 Hubert</span></td><td><span class="m-prof">都更危老建設－新竹地區</span></td></tr>
-          <tr data-n="藍堂嘉" data-p="包租代管平台"><td><span class="m-num">02</span></td><td><span class="m-name">藍堂嘉</span></td><td><span class="m-prof">包租代管平台</span></td></tr>
-          <tr data-n="劉羿岑" data-p="節能減碳顧問"><td><span class="m-num">03</span></td><td><span class="m-name">劉羿岑</span></td><td><span class="m-prof">節能減碳顧問</span></td></tr>
-          <tr data-n="陳向柔Naomi" data-p="商業空間室內設計-新竹以北"><td><span class="m-num">04</span></td><td><span class="m-name">陳向柔 Naomi</span></td><td><span class="m-prof">商業空間室內設計－新竹以北</span></td></tr>
-          <tr data-n="劉恩秀Joan" data-p="人力派遣"><td><span class="m-num">05</span></td><td><span class="m-name">劉恩秀 Joan</span></td><td><span class="m-prof">人力派遣</span></td></tr>
-          <tr data-n="周以仁" data-p="仲介經紀人-台北市大安區"><td><span class="m-num">06</span></td><td><span class="m-name">周以仁</span></td><td><span class="m-prof">仲介經紀人－台北市大安區</span></td></tr>
-          <tr data-n="張瓊安" data-p="仲介經紀人-新北市三重蘆洲新莊"><td><span class="m-num">07</span></td><td><span class="m-name">張瓊安</span></td><td><span class="m-prof">仲介經紀人－新北市三重、蘆洲、新莊</span></td></tr>
-          <tr data-n="高翊書Eason" data-p="都更危老建設-台北市信義區"><td><span class="m-num">08</span></td><td><span class="m-name">高翊書 Eason</span></td><td><span class="m-prof">都更危老建設－台北市信義區</span></td></tr>
-          <tr data-n="王寶佳Renee" data-p="置產投資客-台北市萬華區"><td><span class="m-num">09</span></td><td><span class="m-name">王寶佳 Renee</span></td><td><span class="m-prof">置產投資客－台北市萬華區</span></td></tr>
-          <tr data-n="王春雄Jayson" data-p="理財規劃顧問-雙北"><td><span class="m-num">10</span></td><td><span class="m-name">王春雄 Jayson</span></td><td><span class="m-prof">理財規劃顧問－雙北</span></td></tr>
-          <tr data-n="陳靖薇" data-p="包租代管-台北市內湖松山區"><td><span class="m-num">11</span></td><td><span class="m-name">陳靖薇</span></td><td><span class="m-prof">包租代管－台北市內湖、松山區</span></td></tr>
-          <tr data-n="蘇瓜雅" data-p="財務管理-不動產聯合開發-台北市"><td><span class="m-num">12</span></td><td><span class="m-name">蘇瓜雅</span></td><td><span class="m-prof">財務管理－不動產聯合開發－台北市</span></td></tr>
-          <tr data-n="施宜妏" data-p="金融業-法務顧問"><td><span class="m-num">13</span></td><td><span class="m-name">施宜妏</span></td><td><span class="m-prof">金融業－法務顧問</span></td></tr>
-          <tr data-n="莊大永" data-p="地主召集人-台東市-自主更新"><td><span class="m-num">14</span></td><td><span class="m-name">莊大永</span></td><td><span class="m-prof">地主召集人－台東市－自主更新</span></td></tr>
-          <tr data-n="莊涵勝" data-p="仲介經紀人-台北市信義區"><td><span class="m-num">15</span></td><td><span class="m-name">莊涵勝</span></td><td><span class="m-prof">仲介經紀人－台北市信義區</span></td></tr>
-          <tr data-n="黃冠霖" data-p="證券交易系統-軟體工程師"><td><span class="m-num">16</span></td><td><span class="m-name">黃冠霖</span></td><td><span class="m-prof">證券交易系統－軟體工程師</span></td></tr>
-          <tr data-n="諸紀平" data-p="住宅室內設計裝修-台北市"><td><span class="m-num">17</span></td><td><span class="m-name">諸紀平</span></td><td><span class="m-prof">住宅室內設計裝修－台北市</span></td></tr>
-          <tr data-n="陳秒螢Emma" data-p="房屋貸款-新竹以北"><td><span class="m-num">18</span></td><td><span class="m-name">陳秒螢 Emma</span></td><td><span class="m-prof">房屋貸款－新竹以北</span></td></tr>
-          <tr data-n="李艾莉Aili" data-p="工業蒸氣熱能系統"><td><span class="m-num">19</span></td><td><span class="m-name">李艾莉 Aili</span></td><td><span class="m-prof">工業蒸氣熱能系統</span></td></tr>
-          <tr data-n="莊慧劍" data-p="置產投資客-台北市信義南港區"><td><span class="m-num">20</span></td><td><span class="m-name">莊慧劍</span></td><td><span class="m-prof">置產投資客－台北市信義、南港區</span></td></tr>
-          <tr data-n="吳翊辰" data-p="地政士-中彰投雲嘉南"><td><span class="m-num">21</span></td><td><span class="m-name">吳翊辰</span></td><td><span class="m-prof">地政士－中彰投雲嘉南</span></td></tr>
-          <tr data-n="黃郁婷" data-p="金融業-財務"><td><span class="m-num">22</span></td><td><span class="m-name">黃郁婷</span></td><td><span class="m-prof">金融業－財務</span></td></tr>
-          <tr data-n="林必涵" data-p="農地廠房收租-台中"><td><span class="m-num">23</span></td><td><span class="m-name">林必涵</span></td><td><span class="m-prof">農地廠房收租－台中</span></td></tr>
-          <tr data-n="蔡明璋" data-p="合法隔套置產投資-台北市大安中正區"><td><span class="m-num">24</span></td><td><span class="m-name">蔡明璋</span></td><td><span class="m-prof">合法隔套置產投資－台北市大安、中正區</span></td></tr>
-          <tr data-n="王佳筠" data-p="建案代銷專案管理-北部"><td><span class="m-num">25</span></td><td><span class="m-name">王佳筠</span></td><td><span class="m-prof">建案代銷專案管理－北部</span></td></tr>
-          <tr data-n="楊之慧" data-p="金融業-後台交割"><td><span class="m-num">26</span></td><td><span class="m-name">楊之慧</span></td><td><span class="m-prof">金融業－後台交割</span></td></tr>
-          <tr data-n="陳黎玲Jossie" data-p="會展空間裝修設計-新竹以北"><td><span class="m-num">27</span></td><td><span class="m-name">陳黎玲 Jossie</span></td><td><span class="m-prof">會展空間裝修設計－新竹以北</span></td></tr>
-          <tr data-n="林佩君" data-p="仲介經紀人-台北市中山區"><td><span class="m-num">28</span></td><td><span class="m-name">林佩君</span></td><td><span class="m-prof">仲介經紀人－台北市中山區</span></td></tr>
-          <tr data-n="林媜媁Wei" data-p="資通訊業-財務分析師"><td><span class="m-num">29</span></td><td><span class="m-name">林媜媁 Wei</span></td><td><span class="m-prof">資通訊業－財務分析師</span></td></tr>
-          <tr data-n="李慧如Eva" data-p="再造回收過濾鐵網太空包"><td><span class="m-num">30</span></td><td><span class="m-name">李慧如 Eva</span></td><td><span class="m-prof">再造回收過濾鐵網、太空包</span></td></tr>
-          <tr data-n="凃馨文Wen" data-p="家電B2B"><td><span class="m-num">31</span></td><td><span class="m-name">凃馨文 Wen</span></td><td><span class="m-prof">家電 B2B</span></td></tr>
-          <tr data-n="柳慧燕" data-p="危老都更推動建築師-台北市"><td><span class="m-num">32</span></td><td><span class="m-name">柳慧燕</span></td><td><span class="m-prof">危老都更推動建築師－台北市</span></td></tr>
-          <tr data-n="宋馨巧" data-p="韓語線上家教"><td><span class="m-num">33</span></td><td><span class="m-name">宋馨巧</span></td><td><span class="m-prof">韓語線上家教</span></td></tr>
-          <tr data-n="張瑜晏" data-p="不動產估價與鑑定-雙北桃園"><td><span class="m-num">34</span></td><td><span class="m-name">張瑜晏</span></td><td><span class="m-prof">不動產估價與鑑定－雙北、桃園</span></td></tr>
-          <tr data-n="陳昭男Johnny" data-p="都更土地開發-台北市"><td><span class="m-num">35</span></td><td><span class="m-name">陳昭男 Johnny</span></td><td><span class="m-prof">都更土地開發－台北市</span></td></tr>
-          <tr data-n="包育翎" data-p="地主召集人-高雄市鳳山區"><td><span class="m-num">36</span></td><td><span class="m-name">包育翎</span></td><td><span class="m-prof">地主召集人－高雄市鳳山區</span></td></tr>
-          <tr data-n="蔡岱達" data-p="磁磚經銷商-台中以北"><td><span class="m-num">37</span></td><td><span class="m-name">蔡岱達</span></td><td><span class="m-prof">磁磚經銷商－台中以北</span></td></tr>
-          <tr data-n="蔡淯思Mina" data-p="ERP專案管理"><td><span class="m-num">38</span></td><td><span class="m-name">蔡淯思 Mina</span></td><td><span class="m-prof">ERP 專案管理</span></td></tr>
-          <tr data-n="詹媛婷" data-p="房貸減壓-台北市"><td><span class="m-num">39</span></td><td><span class="m-name">詹媛婷</span></td><td><span class="m-prof">房貸減壓－台北市</span></td></tr>
-          <tr data-n="王雅慧Peggy" data-p="置產投資客-台北市中山大同區"><td><span class="m-num">40</span></td><td><span class="m-name">王雅慧 Peggy</span></td><td><span class="m-prof">置產投資客－台北市中山、大同區</span></td></tr>
-          <tr data-n="何俊彥" data-p="老屋翻新包租代管-台北市"><td><span class="m-num">41</span></td><td><span class="m-name">何俊彥</span></td><td><span class="m-prof">老屋翻新包租代管－台北市</span></td></tr>
-          <tr data-n="周育慈Anna" data-p="包租代管-台北市大安區"><td><span class="m-num">42</span></td><td><span class="m-name">周育慈 Anna</span></td><td><span class="m-prof">包租代管－台北市大安區</span></td></tr>
-          <tr data-n="洪嘉璿左左" data-p="MMT天賦諮詢師"><td><span class="m-num">43</span></td><td><span class="m-name">洪嘉璿左左</span></td><td><span class="m-prof">MMT 天賦諮詢師</span></td></tr>
-          <tr data-n="鍾智媛Fiona" data-p="商務中心-台北市大安中山區"><td><span class="m-num">44</span></td><td><span class="m-name">鍾智媛 Fiona</span></td><td><span class="m-prof">商務中心－台北市大安、中山區</span></td></tr>
-          <tr data-n="黃建嘉" data-p="仲介經紀人-台北市大同區"><td><span class="m-num">45</span></td><td><span class="m-name">黃建嘉</span></td><td><span class="m-prof">仲介經紀人－台北市大同區</span></td></tr>
-          <tr data-n="林中群" data-p="鋼結構防蝕工程"><td><span class="m-num">46</span></td><td><span class="m-name">林中群</span></td><td><span class="m-prof">鋼結構防蝕工程</span></td></tr>
-          <tr data-n="蔡馨葳Mandy" data-p="人壽財務規劃-桃園"><td><span class="m-num">47</span></td><td><span class="m-name">蔡馨葳 Mandy</span></td><td><span class="m-prof">人壽財務規劃－桃園</span></td></tr>
-          <tr data-n="林晏伃" data-p="都更長照建築師-台北市"><td><span class="m-num">48</span></td><td><span class="m-name">林晏伃</span></td><td><span class="m-prof">都更長照建築師－台北市</span></td></tr>
-          <tr data-n="李瑞雲Grace" data-p="置產投資客-台北市松山區"><td><span class="m-num">49</span></td><td><span class="m-name">李瑞雲 Grace</span></td><td><span class="m-prof">置產投資客－台北市松山區</span></td></tr>
-          <tr data-n="謝夢瑰Dian" data-p="高資產房地產顧問-台北"><td><span class="m-num">50</span></td><td><span class="m-name">謝夢瑰 Dian</span></td><td><span class="m-prof">高資產房地產顧問－台北</span></td></tr>
-          <tr data-n="楊淑媛" data-p="地主召集人-台北市士林區"><td><span class="m-num">51</span></td><td><span class="m-name">楊淑媛</span></td><td><span class="m-prof">地主召集人－台北市士林區</span></td></tr>
-          <tr data-n="張怡蘋April" data-p="工程顧問"><td><span class="m-num">52</span></td><td><span class="m-name">張怡蘋 April</span></td><td><span class="m-prof">工程顧問</span></td></tr>
-          <tr data-n="張耕豪" data-p="大板磚工程-連工帶料"><td><span class="m-num">53</span></td><td><span class="m-name">張耕豪</span></td><td><span class="m-prof">大板磚工程－連工帶料</span></td></tr>
-          <tr data-n="陳品攸" data-p="商業法律顧問"><td><span class="m-num">54</span></td><td><span class="m-name">陳品攸</span></td><td><span class="m-prof">商業法律顧問</span></td></tr>
-          <tr data-n="吳念鎧" data-p="仲介經紀人-大新竹區"><td><span class="m-num">55</span></td><td><span class="m-name">吳念鎧</span></td><td><span class="m-prof">仲介經紀人－大新竹區</span></td></tr>
-          <tr data-n="沈瑞婷" data-p="智慧物流導入顧問"><td><span class="m-num">56</span></td><td><span class="m-name">沈瑞婷</span></td><td><span class="m-prof">智慧物流導入顧問</span></td></tr>
+          <!-- 職務標籤：data-role="職務" 有值則 JS 自動渲染彩色 pill；後台補職務後不用改 HTML -->
+          <tr data-n="王常殷Hubert" data-p="都更危老建設-新竹地區" data-role=""><td><span class="m-num">01</span></td><td><span class="m-name">王常殷 Hubert</span></td><td><span class="m-prof">都更危老建設－新竹地區</span></td></tr>
+          <tr data-n="藍堂嘉" data-p="包租代管平台" data-role=""><td><span class="m-num">02</span></td><td><span class="m-name">藍堂嘉</span></td><td><span class="m-prof">包租代管平台</span></td></tr>
+          <tr data-n="劉羿岑" data-p="節能減碳顧問" data-role=""><td><span class="m-num">03</span></td><td><span class="m-name">劉羿岑</span></td><td><span class="m-prof">節能減碳顧問</span></td></tr>
+          <tr data-n="陳向柔Naomi" data-p="商業空間室內設計-新竹以北" data-role=""><td><span class="m-num">04</span></td><td><span class="m-name">陳向柔 Naomi</span></td><td><span class="m-prof">商業空間室內設計－新竹以北</span></td></tr>
+          <tr data-n="劉恩秀Joan" data-p="人力派遣" data-role=""><td><span class="m-num">05</span></td><td><span class="m-name">劉恩秀 Joan</span></td><td><span class="m-prof">人力派遣</span></td></tr>
+          <tr data-n="周以仁" data-p="仲介經紀人-台北市大安區" data-role=""><td><span class="m-num">06</span></td><td><span class="m-name">周以仁</span></td><td><span class="m-prof">仲介經紀人－台北市大安區</span></td></tr>
+          <tr data-n="張瓊安" data-p="仲介經紀人-新北市三重蘆洲新莊" data-role=""><td><span class="m-num">07</span></td><td><span class="m-name">張瓊安</span></td><td><span class="m-prof">仲介經紀人－新北市三重、蘆洲、新莊</span></td></tr>
+          <tr data-n="高翊書Eason" data-p="都更危老建設-台北市信義區" data-role=""><td><span class="m-num">08</span></td><td><span class="m-name">高翊書 Eason</span></td><td><span class="m-prof">都更危老建設－台北市信義區</span></td></tr>
+          <tr data-n="王寶佳Renee" data-p="置產投資客-台北市萬華區" data-role=""><td><span class="m-num">09</span></td><td><span class="m-name">王寶佳 Renee</span></td><td><span class="m-prof">置產投資客－台北市萬華區</span></td></tr>
+          <tr data-n="王春雄Jayson" data-p="理財規劃顧問-雙北" data-role=""><td><span class="m-num">10</span></td><td><span class="m-name">王春雄 Jayson</span></td><td><span class="m-prof">理財規劃顧問－雙北</span></td></tr>
+          <tr data-n="陳靖薇" data-p="包租代管-台北市內湖松山區" data-role=""><td><span class="m-num">11</span></td><td><span class="m-name">陳靖薇</span></td><td><span class="m-prof">包租代管－台北市內湖、松山區</span></td></tr>
+          <tr data-n="蘇瓜雅" data-p="財務管理-不動產聯合開發-台北市" data-role=""><td><span class="m-num">12</span></td><td><span class="m-name">蘇瓜雅</span></td><td><span class="m-prof">財務管理－不動產聯合開發－台北市</span></td></tr>
+          <tr data-n="施宜妏" data-p="金融業-法務顧問" data-role=""><td><span class="m-num">13</span></td><td><span class="m-name">施宜妏</span></td><td><span class="m-prof">金融業－法務顧問</span></td></tr>
+          <tr data-n="莊大永" data-p="地主召集人-台東市-自主更新" data-role=""><td><span class="m-num">14</span></td><td><span class="m-name">莊大永</span></td><td><span class="m-prof">地主召集人－台東市－自主更新</span></td></tr>
+          <tr data-n="莊涵勝" data-p="仲介經紀人-台北市信義區" data-role=""><td><span class="m-num">15</span></td><td><span class="m-name">莊涵勝</span></td><td><span class="m-prof">仲介經紀人－台北市信義區</span></td></tr>
+          <tr data-n="黃冠霖" data-p="證券交易系統-軟體工程師" data-role=""><td><span class="m-num">16</span></td><td><span class="m-name">黃冠霖</span></td><td><span class="m-prof">證券交易系統－軟體工程師</span></td></tr>
+          <tr data-n="諸紀平" data-p="住宅室內設計裝修-台北市" data-role=""><td><span class="m-num">17</span></td><td><span class="m-name">諸紀平</span></td><td><span class="m-prof">住宅室內設計裝修－台北市</span></td></tr>
+          <tr data-n="陳秒螢Emma" data-p="房屋貸款-新竹以北" data-role=""><td><span class="m-num">18</span></td><td><span class="m-name">陳秒螢 Emma</span></td><td><span class="m-prof">房屋貸款－新竹以北</span></td></tr>
+          <tr data-n="李艾莉Aili" data-p="工業蒸氣熱能系統" data-role=""><td><span class="m-num">19</span></td><td><span class="m-name">李艾莉 Aili</span></td><td><span class="m-prof">工業蒸氣熱能系統</span></td></tr>
+          <tr data-n="莊慧劍" data-p="置產投資客-台北市信義南港區" data-role=""><td><span class="m-num">20</span></td><td><span class="m-name">莊慧劍</span></td><td><span class="m-prof">置產投資客－台北市信義、南港區</span></td></tr>
+          <tr data-n="吳翊辰" data-p="地政士-中彰投雲嘉南" data-role=""><td><span class="m-num">21</span></td><td><span class="m-name">吳翊辰</span></td><td><span class="m-prof">地政士－中彰投雲嘉南</span></td></tr>
+          <tr data-n="黃郁婷" data-p="金融業-財務" data-role=""><td><span class="m-num">22</span></td><td><span class="m-name">黃郁婷</span></td><td><span class="m-prof">金融業－財務</span></td></tr>
+          <tr data-n="林必涵" data-p="農地廠房收租-台中" data-role=""><td><span class="m-num">23</span></td><td><span class="m-name">林必涵</span></td><td><span class="m-prof">農地廠房收租－台中</span></td></tr>
+          <tr data-n="蔡明璋" data-p="合法隔套置產投資-台北市大安中正區" data-role=""><td><span class="m-num">24</span></td><td><span class="m-name">蔡明璋</span></td><td><span class="m-prof">合法隔套置產投資－台北市大安、中正區</span></td></tr>
+          <tr data-n="王佳筠" data-p="建案代銷專案管理-北部" data-role=""><td><span class="m-num">25</span></td><td><span class="m-name">王佳筠</span></td><td><span class="m-prof">建案代銷專案管理－北部</span></td></tr>
+          <tr data-n="楊之慧" data-p="金融業-後台交割" data-role=""><td><span class="m-num">26</span></td><td><span class="m-name">楊之慧</span></td><td><span class="m-prof">金融業－後台交割</span></td></tr>
+          <tr data-n="陳黎玲Jossie" data-p="會展空間裝修設計-新竹以北" data-role=""><td><span class="m-num">27</span></td><td><span class="m-name">陳黎玲 Jossie</span></td><td><span class="m-prof">會展空間裝修設計－新竹以北</span></td></tr>
+          <tr data-n="林佩君" data-p="仲介經紀人-台北市中山區" data-role=""><td><span class="m-num">28</span></td><td><span class="m-name">林佩君</span></td><td><span class="m-prof">仲介經紀人－台北市中山區</span></td></tr>
+          <tr data-n="林媜媁Wei" data-p="資通訊業-財務分析師" data-role=""><td><span class="m-num">29</span></td><td><span class="m-name">林媜媁 Wei</span></td><td><span class="m-prof">資通訊業－財務分析師</span></td></tr>
+          <tr data-n="李慧如Eva" data-p="再造回收過濾鐵網太空包" data-role=""><td><span class="m-num">30</span></td><td><span class="m-name">李慧如 Eva</span></td><td><span class="m-prof">再造回收過濾鐵網、太空包</span></td></tr>
+          <tr data-n="凃馨文Wen" data-p="家電B2B" data-role=""><td><span class="m-num">31</span></td><td><span class="m-name">凃馨文 Wen</span></td><td><span class="m-prof">家電 B2B</span></td></tr>
+          <tr data-n="柳慧燕" data-p="危老都更推動建築師-台北市" data-role=""><td><span class="m-num">32</span></td><td><span class="m-name">柳慧燕</span></td><td><span class="m-prof">危老都更推動建築師－台北市</span></td></tr>
+          <tr data-n="宋馨巧" data-p="韓語線上家教" data-role=""><td><span class="m-num">33</span></td><td><span class="m-name">宋馨巧</span></td><td><span class="m-prof">韓語線上家教</span></td></tr>
+          <tr data-n="張瑜晏" data-p="不動產估價與鑑定-雙北桃園" data-role=""><td><span class="m-num">34</span></td><td><span class="m-name">張瑜晏</span></td><td><span class="m-prof">不動產估價與鑑定－雙北、桃園</span></td></tr>
+          <tr data-n="陳昭男Johnny" data-p="都更土地開發-台北市" data-role=""><td><span class="m-num">35</span></td><td><span class="m-name">陳昭男 Johnny</span></td><td><span class="m-prof">都更土地開發－台北市</span></td></tr>
+          <tr data-n="包育翎" data-p="地主召集人-高雄市鳳山區" data-role=""><td><span class="m-num">36</span></td><td><span class="m-name">包育翎</span></td><td><span class="m-prof">地主召集人－高雄市鳳山區</span></td></tr>
+          <tr data-n="蔡岱達" data-p="磁磚經銷商-台中以北" data-role=""><td><span class="m-num">37</span></td><td><span class="m-name">蔡岱達</span></td><td><span class="m-prof">磁磚經銷商－台中以北</span></td></tr>
+          <tr data-n="蔡淯思Mina" data-p="ERP專案管理" data-role=""><td><span class="m-num">38</span></td><td><span class="m-name">蔡淯思 Mina</span></td><td><span class="m-prof">ERP 專案管理</span></td></tr>
+          <tr data-n="詹媛婷" data-p="房貸減壓-台北市" data-role=""><td><span class="m-num">39</span></td><td><span class="m-name">詹媛婷</span></td><td><span class="m-prof">房貸減壓－台北市</span></td></tr>
+          <tr data-n="王雅慧Peggy" data-p="置產投資客-台北市中山大同區" data-role=""><td><span class="m-num">40</span></td><td><span class="m-name">王雅慧 Peggy</span></td><td><span class="m-prof">置產投資客－台北市中山、大同區</span></td></tr>
+          <tr data-n="何俊彥" data-p="老屋翻新包租代管-台北市" data-role=""><td><span class="m-num">41</span></td><td><span class="m-name">何俊彥</span></td><td><span class="m-prof">老屋翻新包租代管－台北市</span></td></tr>
+          <tr data-n="周育慈Anna" data-p="包租代管-台北市大安區" data-role=""><td><span class="m-num">42</span></td><td><span class="m-name">周育慈 Anna</span></td><td><span class="m-prof">包租代管－台北市大安區</span></td></tr>
+          <tr data-n="洪嘉璿左左" data-p="MMT天賦諮詢師" data-role=""><td><span class="m-num">43</span></td><td><span class="m-name">洪嘉璿左左</span></td><td><span class="m-prof">MMT 天賦諮詢師</span></td></tr>
+          <tr data-n="鍾智媛Fiona" data-p="商務中心-台北市大安中山區" data-role=""><td><span class="m-num">44</span></td><td><span class="m-name">鍾智媛 Fiona</span></td><td><span class="m-prof">商務中心－台北市大安、中山區</span></td></tr>
+          <tr data-n="黃建嘉" data-p="仲介經紀人-台北市大同區" data-role=""><td><span class="m-num">45</span></td><td><span class="m-name">黃建嘉</span></td><td><span class="m-prof">仲介經紀人－台北市大同區</span></td></tr>
+          <tr data-n="林中群" data-p="鋼結構防蝕工程" data-role=""><td><span class="m-num">46</span></td><td><span class="m-name">林中群</span></td><td><span class="m-prof">鋼結構防蝕工程</span></td></tr>
+          <tr data-n="蔡馨葳Mandy" data-p="人壽財務規劃-桃園" data-role=""><td><span class="m-num">47</span></td><td><span class="m-name">蔡馨葳 Mandy</span></td><td><span class="m-prof">人壽財務規劃－桃園</span></td></tr>
+          <tr data-n="林晏伃" data-p="都更長照建築師-台北市" data-role=""><td><span class="m-num">48</span></td><td><span class="m-name">林晏伃</span></td><td><span class="m-prof">都更長照建築師－台北市</span></td></tr>
+          <tr data-n="李瑞雲Grace" data-p="置產投資客-台北市松山區" data-role=""><td><span class="m-num">49</span></td><td><span class="m-name">李瑞雲 Grace</span></td><td><span class="m-prof">置產投資客－台北市松山區</span></td></tr>
+          <tr data-n="謝夢瑰Dian" data-p="高資產房地產顧問-台北" data-role=""><td><span class="m-num">50</span></td><td><span class="m-name">謝夢瑰 Dian</span></td><td><span class="m-prof">高資產房地產顧問－台北</span></td></tr>
+          <tr data-n="楊淑媛" data-p="地主召集人-台北市士林區" data-role=""><td><span class="m-num">51</span></td><td><span class="m-name">楊淑媛</span></td><td><span class="m-prof">地主召集人－台北市士林區</span></td></tr>
+          <tr data-n="張怡蘋April" data-p="工程顧問" data-role=""><td><span class="m-num">52</span></td><td><span class="m-name">張怡蘋 April</span></td><td><span class="m-prof">工程顧問</span></td></tr>
+          <tr data-n="張耕豪" data-p="大板磚工程-連工帶料" data-role=""><td><span class="m-num">53</span></td><td><span class="m-name">張耕豪</span></td><td><span class="m-prof">大板磚工程－連工帶料</span></td></tr>
+          <tr data-n="陳品攸" data-p="商業法律顧問" data-role=""><td><span class="m-num">54</span></td><td><span class="m-name">陳品攸</span></td><td><span class="m-prof">商業法律顧問</span></td></tr>
+          <tr data-n="吳念鎧" data-p="仲介經紀人-大新竹區" data-role=""><td><span class="m-num">55</span></td><td><span class="m-name">吳念鎧</span></td><td><span class="m-prof">仲介經紀人－大新竹區</span></td></tr>
+          <tr data-n="沈瑞婷" data-p="智慧物流導入顧問" data-role=""><td><span class="m-num">56</span></td><td><span class="m-name">沈瑞婷</span></td><td><span class="m-prof">智慧物流導入顧問</span></td></tr>
         </tbody>
       </table>
       <div class="no-result" id="noRes">找不到符合的夥伴，請試試其他關鍵字。</div>
     </div>
+    <!-- 第 4c 項：名冊編輯按鈕同步修正 -->
     <div class="admin-edit">
-      <a href="#">
+      <a href="https://docs.google.com/spreadsheets/d/1XcSJ_U6i6kIHruHObblZEVQEd7d4M0X8LNGG9Oftgd0/edit" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         編輯名冊（資訊組）
       </a>
@@ -2282,21 +2376,28 @@ function tfCardHTML(x){
   var dateBlock = (dt && !isNaN(dt))
     ? '<div class="tf-date"><div class="m">'+mNames[dt.getMonth()]+'</div><div class="d">'+dt.getDate()+'</div><div class="y">'+dt.getFullYear()+'</div></div>'
     : '<div class="tf-date"><div class="m">近期</div><div class="d">·</div></div>';
+  // 第 5 項：學分標籤 — 有 credit 欄才顯示
+  var creditBadge = (x.credit || x['學分']) ?
+    '<span class="tf-credit">' + tfTag(x.title) + ' · ' + (x.credit||x['學分']) + ' 學分</span>' : '';
   return '<a class="tf-card" href="'+(x.link||'#')+(x.link?'?openExternalBrowser=1':'')+'" target="_blank" rel="noopener">'
     + dateBlock
     + '<div class="tf-body"><div class="tf-title">'+x.title+'</div>'
-    + '<div class="tf-meta"><span class="tf-tag">'+tfTag(x.title)+'</span>'+tfModeBadge(x.mode)+'</div></div>'
+    + '<div class="tf-meta"><span class="tf-tag">'+tfTag(x.title)+'</span>'+tfModeBadge(x.mode)+(creditBadge?creditBadge:'')+'</div></div>'
     + '<svg class="tf-go" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>'
     + '</a>';
 }
 
-// 依當前 Tab 渲染卡片
+// 第 5 項：目前的培訓類型篩選 filter（all 或某類型字串）
+var trainingTypeFilter = 'all';
+
+// 依當前 Tab 渲染卡片（mode + type 雙篩選）
 function tfPaint(){
   var box = document.getElementById('trainingList');
   if(!box) return;
   var rows = trainingData.filter(function(x){
-    if(trainingFilter==='all') return true;
-    return (x.mode||'online') === trainingFilter;
+    var modeOk = (trainingFilter==='all') || ((x.mode||'online') === trainingFilter);
+    var typeOk  = (trainingTypeFilter==='all') || (tfTag(x.title) === trainingTypeFilter);
+    return modeOk && typeOk;
   });
   if(!rows.length){
     box.innerHTML = '<div class="tf-loading">此分類近期暫無場次，請切換「全部」或見<a href="https://bntw.niiice-design.com/news-category/training/?openExternalBrowser=1" target="_blank" rel="noopener" style="color:var(--red)">官方培訓頁</a>。</div>';
@@ -2305,7 +2406,7 @@ function tfPaint(){
   box.innerHTML = rows.map(tfCardHTML).join('');
 }
 
-// Tab 切換綁定 + 計數
+// Tab 切換綁定 + 計數（形式篩選）
 function tfBindTabs(){
   var tabs = document.querySelectorAll('.tf-tab');
   var nAll = trainingData.length;
@@ -2324,6 +2425,34 @@ function tfBindTabs(){
   });
 }
 
+// 第 5 項：動態生成培訓類型篩選按鈕（掃全部卡片標題，抽出現有類型）
+function tfBuildTypeTabs(){
+  var container = document.getElementById('tfTypeTabs');
+  if(!container) return;
+  // 收集所有類型（去重）
+  var seen = {};
+  var types = [];
+  trainingData.forEach(function(x){
+    var t = tfTag(x.title);
+    if(!seen[t]){ seen[t]=true; types.push(t); }
+  });
+  if(!types.length){ container.style.display='none'; return; }
+  // 生成按鈕：「全部類型」+ 各類型
+  var html = '<button class="tf-type-tab active" data-type="all" type="button">全部類型</button>';
+  types.forEach(function(t){
+    html += '<button class="tf-type-tab" data-type="'+t+'" type="button">'+t+'</button>';
+  });
+  container.innerHTML = html;
+  // 綁定事件
+  container.querySelectorAll('.tf-type-tab').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      trainingTypeFilter = btn.dataset.type;
+      container.querySelectorAll('.tf-type-tab').forEach(function(b){ b.classList.toggle('active', b===btn); });
+      tfPaint();
+    });
+  });
+}
+
 function tfInit(list){
   // 濾過期 + 排序（全量，不在此切 6 筆，讓 Tab 各自完整）
   var today = new Date(); today.setHours(0,0,0,0);
@@ -2332,18 +2461,21 @@ function tfInit(list){
     var d = new Date(x.date); return isNaN(d) ? true : d >= today;
   }).sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
   tfBindTabs();
+  tfBuildTypeTabs(); // 第 5 項：動態生成類型篩選按鈕
   tfPaint();
 }
 
-// GAS 回的中文欄位（標題/日期/連結/上課方式）→ 前端英文 key（title/date/link/mode）
+// GAS 回的中文欄位（標題/日期/連結/上課方式/學分）→ 前端英文 key
+// 第 5 項：加入「學分」欄映射（後台有值才帶入，空或無欄不顯示）
 function tfMap(rows){
   return (rows||[]).map(function(r){
     if(r.title || r.link) return r; // 已是英文 key（fallback）直接用
     return {
-      title: r['標題'] || r['名稱'] || '',
-      date:  r['日期'] || '',
-      link:  r['連結'] || '',
-      mode:  (r['上課方式'] || r['mode'] || 'online')
+      title:  r['標題'] || r['名稱'] || '',
+      date:   r['日期'] || '',
+      link:   r['連結'] || '',
+      mode:   (r['上課方式'] || r['mode'] || 'online'),
+      credit: r['學分'] || ''  // 第 5 項：學分欄，後台補後自動顯示
     };
   }).filter(function(x){ return x.title; });
 }
@@ -2375,7 +2507,8 @@ function acEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){retu
 function acRender(list){
   var box=document.getElementById('activitiesContent');
   if(!box) return;
-  var mN=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  // 第 4b 項：活動卡右側日期塊改中文月份（原英文 JAN/JUN 等）
+  var mN=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
   var wd=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
   // 依日期排序：未結束的在前、最近的在上
   var rows=(list||[]).filter(function(x){return x['活動名稱'];});
@@ -2386,19 +2519,29 @@ function acRender(list){
     var done=/已結束|結束/.test(x['狀態']||'');
     var statusHTML = x['狀態'] ? '<span class="status '+(done?'s-done':'s-open')+'" style="'+(done?'background:rgba(90,100,114,.07);color:#5A6472':'background:rgba(207,32,48,.08);color:var(--red)')+'">'+acEsc(x['狀態'])+'</span>' : '';
     var meta='';
+    // 第 4a 項：時間顯示邏輯 — 優先從日期時間欄解析；沒有時間則顯示淡字「時間待補」提示
+    // 第 4b 項：日期塊改中文月份格式（mN 已改為中文）
     // 用原字串判斷有沒有帶時間（避免 new Date('2026-07-09') 被當 UTC 午夜→台北 08:00 的假時間）
     var hasTime = /\d{1,2}:\d{2}/.test(String(x['日期時間']||''));
-    var tm = hasTime ? (String(x['日期時間']).match(/(\d{1,2}:\d{2})/)||[])[1] : '';
+    // 也嘗試從備註解析時間（後台「備註」欄自由文字）
+    var tmFromNote = (String(x['備註']||'').match(/(\d{1,2}:\d{2})/)||[])[1] || '';
+    var tm = hasTime ? (String(x['日期時間']).match(/(\d{1,2}:\d{2})/)||[])[1] : tmFromNote;
     if(x['日期時間']){
       var dstr = dt&&!isNaN(dt) ? (dt.getFullYear()+' 年 '+String(dt.getMonth()+1).padStart(2,'0')+' 月 '+String(dt.getDate()).padStart(2,'0')+' 日'+(isNaN(dt.getDay())?'':'（'+wd[dt.getDay()]+'）')) : acEsc(x['日期時間']);
       meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'+dstr+'</div>';
-      if(tm) meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>'+tm+'</div>';
+      // 時間：有則顯示；無則顯示「時間待補」淡字提示（不假造時間）
+      if(tm){
+        meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>'+tm+'</div>';
+      }else{
+        meta+='<div class="meta-item" style="color:var(--gray-300)"><svg viewBox="0 0 24 24" style="stroke:var(--gray-300)"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg><span style="font-style:italic">時間待補</span></div>';
+      }
     }
     if(x['地點']) meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>'+acEsc(x['地點'])+'</div>';
     if(x['費用']) meta+='<div class="meta-item"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'+acEsc(x['費用'])+'</div>';
     var btn = (x['報名連結'] && !done) ? '<div style="display:flex;gap:12px;flex-wrap:wrap"><a href="'+acEsc(x['報名連結'])+'?openExternalBrowser=1" target="_blank" rel="noopener" class="btn btn-primary">立即報名</a></div>'
             : (x['報名連結'] ? '<div style="display:flex;gap:12px;flex-wrap:wrap"><a href="'+acEsc(x['報名連結'])+'?openExternalBrowser=1" target="_blank" rel="noopener" class="btn btn-outline" style="border-color:var(--gray-200);color:var(--gray-500)">查看報名表單</a></div>' : '');
-    var side = dt&&!isNaN(dt) ? '<div class="feat-side"><div><div class="date-big">'+dt.getDate()+'</div><div class="date-month">'+mN[dt.getMonth()]+' '+dt.getFullYear()+'</div><div class="date-wd">'+wd[dt.getDay()]+'</div></div></div>' : '';
+    // 第 4b 項：日期塊格式「日期數字大字 + 中文年月」
+    var side = dt&&!isNaN(dt) ? '<div class="feat-side"><div><div class="date-big">'+dt.getDate()+'</div><div class="date-month">'+dt.getFullYear()+' 年 '+mN[dt.getMonth()]+'</div><div class="date-wd">'+wd[dt.getDay()]+'</div></div></div>' : '';
     var typeLabel = x['類型'] || '分會活動';
     return '<div class="feat-event" style="margin-bottom:16px"><div class="feat-body">'
       +'<div class="badge badge-red">'+acEsc(typeLabel)+'</div>'
@@ -2567,6 +2710,27 @@ window.addEventListener('scroll',function(){
     if(a.getAttribute('href')==='#'+cur)a.classList.add('act');
   });
 });
+
+// ─────────────────────────────────────────────
+// 第 7 項：名冊幹部職務標籤渲染（ROSTER_ROLE_7ZK3）
+// 掃 tbody 每列 data-role，有值就在姓名 <td> 插入彩色 pill
+// data-role 目前全為空，需求方在 Sheet 名冊分頁補職務欄後，
+// 可改成 fetch API 並寫入 data-role，此函式自動上色。
+// 目前機制：直接讀 HTML 上的 data-role=""，有值才顯示，空值靜默。
+// ─────────────────────────────────────────────
+(function renderRosterRoles(){
+  // 主席/秘書長/財務等主職位用紅色，其餘幹部用金色
+  var chiefRoles = /主席|執行主席|秘書長|財務|教育協調|會籍協調|活動協調|資訊長|副主席/;
+  document.querySelectorAll('#rTbl tbody tr[data-role]').forEach(function(tr){
+    var role = (tr.getAttribute('data-role')||'').trim();
+    if(!role) return;
+    var nameTd = tr.querySelectorAll('td')[1];
+    if(!nameTd) return;
+    var cls = chiefRoles.test(role) ? 'm-role m-role-chief' : 'm-role m-role-gold';
+    var pill = '<span class="'+cls+'">'+role+'</span>';
+    nameTd.innerHTML += pill;
+  });
+})();
 </script>
 
 <!-- ── SIDE NAV HTML v4 — 極簡文字錨點 (SIDENAV4_MNQ7VK) ── -->
