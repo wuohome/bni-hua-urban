@@ -238,6 +238,15 @@ a{text-decoration:none;color:inherit}
 .mini-num.gd{color:var(--gold)}
 .mini-desc{font-size:12px;color:var(--gray-600);font-weight:500}
 
+/* ── 分會介紹影片 (INTRO_VIDEO_5KP3) ── */
+.about-video{margin-top:56px}
+.av-head{text-align:center;margin-bottom:24px}
+.av-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.18em;color:var(--red);text-transform:uppercase;margin-bottom:10px}
+.av-title{font-family:"Noto Serif TC",serif;font-size:clamp(20px,2.6vw,26px);font-weight:700;color:var(--gray-900);line-height:1.3;margin-bottom:6px}
+.av-sub{font-size:14px;color:var(--gray-500)}
+.av-frame{position:relative;width:100%;max-width:880px;margin:0 auto;aspect-ratio:16/9;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 12px 40px -12px rgba(0,0,0,.28);background:#000}
+.av-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
 /* ── ACTIVITIES ── */
 .activities{background:var(--off-white);padding:48px 0}
 .feat-event{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow-md);overflow:hidden;display:grid;grid-template-columns:1fr auto;margin-bottom:24px;border:1px solid var(--gray-100)}
@@ -1396,6 +1405,24 @@ tr.hidden{display:none}
         <div class="mini-stat"><div class="mini-num gd">100%</div><div class="mini-desc">線上出席彈性</div></div>
         <div class="mini-stat"><div class="mini-num">5+</div><div class="mini-desc">核心產業整合</div></div>
         <div class="mini-stat"><div class="mini-num">週會</div><div class="mini-desc">固定交流機制</div></div>
+      </div>
+    </div>
+
+    <!-- ── 分會介紹影片（官方 YouTube 嵌入 INTRO_VIDEO_5KP3）── -->
+    <div class="about-video">
+      <div class="av-head">
+        <span class="av-label">分會介紹影片</span>
+        <h3 class="av-title">要讓都更，真正動起來</h3>
+        <p class="av-sub">用 2 分鐘認識華都更分會的理念與夥伴</p>
+      </div>
+      <div class="av-frame">
+        <iframe src="https://www.youtube.com/embed/h_OW0u4A59k?si=ONCZzmpdrWWnLmc5&rel=0"
+                title="華都更 - 要讓都更真正動起來"
+                loading="lazy"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allowfullscreen></iframe>
       </div>
     </div>
   </div>
