@@ -678,42 +678,56 @@ tr.hidden{display:none}
   · 整體更克制，貼近正式分會官網側欄調性
 */
 
-/* 桌面：主內容右移 */
+/* 桌面：主內容只留收合態側欄寬度（展開時側欄浮在內容上、不推擠版面） */
 @media(min-width:1100px){
-  body{padding-left:232px}
+  body{padding-left:72px}
 }
 
-/* 側欄容器 */
+/* ── 側欄容器：平常收合成細條（只露圓點），hover 展開露文字 SIDENAV4_MNQ7VK ── */
 .side-nav{
   position:fixed;
   left:0;
   top:0;
   bottom:0;
-  width:220px;
+  width:64px;                 /* 收合態：細條 */
   z-index:90;
   display:none;
   flex-direction:column;
   justify-content:center;
-  padding:80px 0 40px 40px;
+  padding:80px 0 40px 30px;
+  background:linear-gradient(to right, var(--white) 78%, rgba(255,255,255,0));
+  transition:width .32s cubic-bezier(.4,0,.2,1), background .32s ease;
 }
 @media(min-width:1100px){
   .side-nav{display:flex}
 }
+/* hover：展開成完整側欄 */
+.side-nav:hover{
+  width:220px;
+  background:linear-gradient(to right, var(--white) 90%, rgba(255,255,255,.96) 96%, rgba(255,255,255,0));
+  box-shadow:14px 0 30px -22px rgba(0,0,0,.18);
+}
 
-/* 側欄標題區 */
+/* 側欄標題區：收合時隱藏 */
 .sn-heading{
   display:flex;
   align-items:center;
   gap:8px;
   margin-bottom:18px;
-  padding-left:14px;
+  padding-left:6px;
+  opacity:0;
+  transform:translateX(-4px);
+  transition:opacity .22s ease, transform .26s ease;
+  pointer-events:none;
 }
+.side-nav:hover .sn-heading{opacity:1;transform:none}
 .sn-heading-label{
   font-size:10px;
   font-weight:600;
   letter-spacing:.14em;
   text-transform:uppercase;
   color:var(--gray-400);
+  white-space:nowrap;
 }
 .sn-heading-line{
   flex:1;
@@ -731,7 +745,7 @@ tr.hidden{display:none}
 .side-nav-list::before{
   content:'';
   position:absolute;
-  left:3px;            /* 對齊 5px 圓點中心 */
+  left:3px;            /* 對齊圓點中心 */
   top:14px;
   bottom:14px;
   width:1px;
@@ -754,11 +768,11 @@ tr.hidden{display:none}
   color:var(--gray-700, #3d4555);
 }
 
-/* active 左側紅色短直線（取代整條進度軌） */
+/* active 左側紅色短直線 */
 .side-nav-item::before{
   content:'';
   position:absolute;
-  left:-26px;          /* 貼到側欄最左緣 */
+  left:-30px;          /* 貼到側欄最左緣 */
   top:50%;
   transform:translateY(-50%) scaleY(0);
   width:3px;
@@ -771,13 +785,13 @@ tr.hidden{display:none}
   transform:translateY(-50%) scaleY(1);
 }
 
-/* 小圓點（單層，5px） */
+/* 小圓點（收合態主角，hover 仍在） */
 .sn-dot{
   flex-shrink:0;
   position:relative;
   z-index:1;
-  width:7px;
-  height:7px;
+  width:8px;
+  height:8px;
   border-radius:50%;
   background:var(--gray-200);
   box-shadow:0 0 0 3px var(--white);  /* 白圈讓圓點蓋過導引線 */
@@ -788,22 +802,41 @@ tr.hidden{display:none}
 }
 .side-nav-item.sn-active .sn-dot{
   background:var(--red);
-  transform:scale(1.25);
+  transform:scale(1.3);
 }
 
-/* 文字標籤 */
+/* 文字標籤：收合時隱藏、hover 淡入 */
 .sn-label{
   font-size:14px;
   font-weight:400;
   letter-spacing:.02em;
   white-space:nowrap;
   line-height:1.3;
-  transition:font-weight .2s ease, color .2s ease;
+  opacity:0;
+  transform:translateX(-6px);
+  transition:opacity .22s ease, transform .26s ease, font-weight .2s ease, color .2s ease;
+  pointer-events:none;
+}
+.side-nav:hover .sn-label{
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
 }
 .side-nav-item.sn-active .sn-label{
   color:var(--red);
   font-weight:600;
 }
+/* 收合態：active 圓點旁加一個小紅標暗示「你在這」（不靠文字也看得出位置） */
+.side-nav-item.sn-active .sn-dot::after{
+  content:'';
+  position:absolute;
+  inset:-3px;
+  border-radius:50%;
+  border:1.5px solid rgba(207,32,48,.35);
+  opacity:1;
+  transition:opacity .2s ease;
+}
+.side-nav:hover .side-nav-item.sn-active .sn-dot::after{opacity:0}
 
 /* RWD：手機隱藏側欄 */
 @media(max-width:1099px){
