@@ -10,6 +10,14 @@
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BNI 華都更分會 — 夥伴資訊入口</title>
+<meta name="description" content="BNI 華都更分會夥伴資訊入口——活動行事曆、培訓快訊、Power Team 組聚資訊">
+<meta property="og:title" content="BNI 華都更分會 — 夥伴資訊入口">
+<meta property="og:description" content="BNI 華都更分會夥伴資訊入口——活動行事曆、培訓快訊、Power Team 組聚資訊">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://wuohome.github.io/bni-hua-urban/">
+<meta property="og:image" content="https://wuohome.github.io/bni-hua-urban/assets/dual-track-collab.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
@@ -1542,7 +1550,7 @@ section[id]{scroll-margin-top:68px}
               </div>
             </div>
             <div class="dc-photo">
-              <img src="assets/ellie-portrait.png" alt="董事顧問 邱碩鈺 Ellie Chiu">
+              <img src="assets/ellie-portrait.jpg" alt="董事顧問 邱碩鈺 Ellie Chiu" loading="lazy" width="680" height="785">
               <div class="dc-photo-name">邱碩鈺 Ellie Chiu<span>BNI 華都更分會 董事顧問</span></div>
             </div>
           </div>
@@ -2121,6 +2129,47 @@ section[id]{scroll-margin-top:68px}
 // ─────────────────────────────────────────────
 
 // ─────────────────────────────────────────────
+// fetchJSON — 共用 fetch helper（FETCHJSON_HELPER_9QW3）
+// sessionStorage 快取（TTL 預設 10 分鐘）+ AbortController 10 秒逾時。
+// 快取 key 帶版本前綴，未來若欄位格式變動只要改前綴即可讓舊快取失效。
+// ─────────────────────────────────────────────
+var FETCHJSON_CACHE_PREFIX = 'huv1:';
+function fetchJSON(url, cacheKey, ttlMs){
+  ttlMs = ttlMs || 10 * 60 * 1000; // 預設 10 分鐘
+  var fullKey = FETCHJSON_CACHE_PREFIX + cacheKey;
+  // 讀快取：sessionStorage 可能滿或被停用（無痕模式），try/catch 包住，失敗當沒快取
+  try{
+    var cached = sessionStorage.getItem(fullKey);
+    if(cached){
+      var parsed = JSON.parse(cached);
+      if(parsed && typeof parsed.t === 'number' && (Date.now() - parsed.t) < ttlMs){
+        return Promise.resolve(parsed.d);
+      }
+    }
+  }catch(e){ /* sessionStorage 不可用，忽略，照常 fetch */ }
+
+  var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var timer = controller ? setTimeout(function(){ controller.abort(); }, 10000) : null;
+
+  return fetch(url, controller ? { signal: controller.signal } : undefined)
+    .then(function(res){
+      if(timer) clearTimeout(timer);
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function(data){
+      try{
+        sessionStorage.setItem(fullKey, JSON.stringify({ t: Date.now(), d: data }));
+      }catch(e){ /* 存快取失敗（額滿/停用）不影響本次資料回傳 */ }
+      return data;
+    })
+    .catch(function(err){
+      if(timer) clearTimeout(timer);
+      throw err;
+    });
+}
+
+// ─────────────────────────────────────────────
 // 月曆 Grid — 動態讀 Google Sheet（DYNCAL_7RP2MK4E）
 // ─────────────────────────────────────────────
 var DOT_CLASS = { '活動':'dot-evt', 'MSP':'dot-msp', '來賓日':'dot-guest', '組聚':'dot-grp', '例會':'dot-meeting' };
@@ -2228,12 +2277,8 @@ function renderCalGrid() {
 
 // fetch GAS，回來後重繪月曆
 function fetchCalEvents() {
-  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('行事曆') + '&t=' + Date.now();
-  fetch(url)
-    .then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.json();
-    })
+  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('行事曆');
+  fetchJSON(url, 'calendar-行事曆', 10 * 60 * 1000)
     .then(function(json) {
       if (!json.ok || !Array.isArray(json.data)) throw new Error('bad payload');
       CAL_EVENTS = json.data.map(function(row) {
@@ -2624,8 +2669,7 @@ function tfMap(rows){
 }
 (function loadTraining(){
   if(TRAINING_API){
-    fetch(TRAINING_API + (TRAINING_API.indexOf('?')>-1?'&':'?') + 't=' + Date.now())
-      .then(function(r){ return r.json(); })
+    fetchJSON(TRAINING_API, 'training-培訓快訊', 10 * 60 * 1000)
       .then(function(data){
         var rows = Array.isArray(data) ? data : (data.data || data.rows || []);
         var mapped = tfMap(rows);
@@ -2640,12 +2684,6 @@ function tfMap(rows){
 // ─────────────────────────────────────────────
 // 活動詳情 (ACTIVITIES_FEED_9X) — 動態讀後台「活動」分頁
 // ─────────────────────────────────────────────
-var ACTIVITIES_API = 'https://script.google.com/macros/s/AKfycbyCL7tHMfIkHHAhL0WDX-TMdMfmxNdWkVkGRhdaAjESgmUZ3-eJKJ7YsOi1IS-RMxW4/exec?sheet=活動';
-var activitiesFallback = [{
-  '活動名稱':'首次實體聚會','日期時間':'2026-04-17 19:00',
-  '地點':'空白場域 延吉館 B1（台北市大安區延吉街153-10號B1）','費用':'$300 現場收現金',
-  '報名連結':'https://forms.gle/DM7wQCLWxxpPJxCy8','報名截止':'2026-04-15','狀態':'已結束','備註':''
-}];
 function acEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function acRender(list){
   var box=document.getElementById('activitiesContent');
@@ -2762,16 +2800,18 @@ function acMapFromCalendar(rows){
   });
 }
 (function loadActivities(){
-  // 讀行事曆分頁（與月曆同一份）
-  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('行事曆') + '&t=' + Date.now();
-  fetch(url)
-    .then(function(r){ return r.json(); })
+  // 讀行事曆分頁（與月曆同一份，快取 key 共用故通常命中 sessionStorage、不重打 API）
+  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('行事曆');
+  fetchJSON(url, 'calendar-行事曆', 10 * 60 * 1000)
     .then(function(data){
       var rows = Array.isArray(data) ? data : (data.data || data.rows || []);
       var acts = acMapFromCalendar(rows);
-      acRender(acts.length ? acts : activitiesFallback);
+      acRender(acts);
     })
-    .catch(function(){ acRender(activitiesFallback); });
+    .catch(function(){
+      var box=document.getElementById('activitiesContent');
+      if(box) box.innerHTML='<div class="ac-loading" style="font-size:14px;color:var(--gray-400);padding:18px 0">活動資料載入失敗，請下拉重新整理。</div>';
+    });
 })();
 
 // ─────────────────────────────────────────────
@@ -2800,9 +2840,8 @@ function gnFmt(d){
   return (d.getMonth()+1)+'/'+d.getDate()+'（'+wd[d.getDay()]+'）';
 }
 (function loadGroupMeetings(){
-  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('組聚') + '&t=' + Date.now();
-  fetch(url)
-    .then(function(r){ return r.json(); })
+  var url = GAS_CAL_URL + '?sheet=' + encodeURIComponent('組聚');
+  fetchJSON(url, 'calendar-組聚', 10 * 60 * 1000)
     .then(function(data){
       var rows = Array.isArray(data) ? data : (data.data || data.rows || []);
       rows.forEach(function(r){
